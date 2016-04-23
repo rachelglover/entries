@@ -2,25 +2,44 @@
 
 namespace App;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Authenticatable
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    use Authenticatable, CanResetPassword;
 
     /**
-     * The attributes excluded from the model's JSON form.
+     * User can have many events
      *
-     * @var array
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    public function events()
+    {
+        return $this->hasMany('App\Event');
+    }
+
+    /**
+     * User can have many entries
+     */
+    public function entries() {
+        return $this->hasMany('App\Entry');
+    }
+    
+    
+    /**
+     * Fillable user fields (for registration)
+     */
+    protected $fillable = array(
+        'email',
+        'firstname',
+        'lastname',
+        'club',
+        'homeCountry',
+        'phone'
+    );
+
 }

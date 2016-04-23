@@ -1,0 +1,89 @@
+/* override the default bootstrap th and td border-tops to null */
+.table th, .table td {
+    border-top: none !important;
+}
+
+/* carousel captions */
+.carousel-caption {
+    color: #fff;
+}
+
+/* specific competition panels for the under construction events page */
+.panel-competition .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-competition a {
+    color: #fff;
+}
+
+.panel-competition a:hover {
+    color: #fff;
+}
+
+.panel-competition {
+    border-color: #5cb85c;
+}
+
+/* entry form extra info required show/hide */
+#extra-div {
+    display:none;
+}
+#extra-checkbox:checked + #extra-div {
+    display:inline;
+}
+
+/* overriding the text colours for success danger warning to make them brighter */
+.text-danger{color: red}
+.text-success{color: green}
+.text-warning{color: orange}
+.text-fullevent{color: dimgrey}
+
+/* generic 'bold' class for random text things */
+.bold {
+    font-weight: bold;
+}
+
+/* xs buttons for tags */
+.btn-xs {
+    text-transform:uppercase;
+    padding:9px 20px;
+    color:#898989;
+    display:inline-block;
+    font-size:12px;
+    font-weight:700;
+    border-radius:2px;
+    border:1px;
+    color:#000;
+    outline:1px;
+    white-space:normal;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+/** form label override */
+label {
+    font-weight: bold;
+}
+
+.center {
+    text-align: center;
+}
+/** social links **/
+.facebook {
+    color: #4460ae;
+}
+.gplus {
+    color: #c21f25;
+}
+.twitter {
+    color: #3cf;
+}
+.pinterest {
+    color: #000;
+}
