@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use App\Extra;
+use App\Http\Requests\ExtrasFormRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,7 +18,7 @@ class ExtrasController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request) {
+    public function store(ExtrasFormRequest $request) {
 
         Extra::create($request->all());
 

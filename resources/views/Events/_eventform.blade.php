@@ -43,7 +43,7 @@
 
     <div class="form-group">
         {!! Form::label('website', 'Website (if available):') !!}
-        {!! Form::text('website', null, ['class' => 'form-control']) !!}
+        {!! Form::text('website', 'http://www.', ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">

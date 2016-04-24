@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use App\Http\Requests\CompetitionFormRequest;
 use Illuminate\Http\Request;
 use App\Competition;
 use App\Http\Requests;
@@ -18,7 +19,7 @@ class CompetitionController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request) {
+    public function store(CompetitionFormRequest $request) {
         //name, description, fee
         $input['event_id'] = $request->input('event');
         $input['name'] = $request->input('name');
@@ -64,7 +65,7 @@ class CompetitionController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update($id, Request $request)
+    public function update($id, CompetitionFormRequest $request)
     {
         //get the event
         $competition = Competition::findOrFail($id);

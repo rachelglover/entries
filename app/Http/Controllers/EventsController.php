@@ -188,8 +188,10 @@ class EventsController extends Controller
                 $entries += $detail->entries()->get()->count();
                 $max += $detail->max;
             }
-            $percentage = sprintf('%0.2f',(($entries / $max) * 100));
-            $competitionsTable->addRow([$competition->name, $percentage]);
+            if ($max > 0 && $entries > 0) {
+                $percentage = sprintf('%0.2f',(($entries / $max) * 100));
+                $competitionsTable->addRow([$competition->name, $percentage]);
+            }
         }
         $competitionsChart->BarChart('CompetitionsFilled', $competitionsTable, [
             'title' => 'Places already filled (%) for each competition',

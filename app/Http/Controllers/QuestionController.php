@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use App\Http\Requests\QuestionFormRequest;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class QuestionController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request) {
+    public function store(QuestionFormRequest $request) {
         //question, answerType, event_id
         $input['event_id'] = $request->input('event');
         $input['question'] = $request->input('question');

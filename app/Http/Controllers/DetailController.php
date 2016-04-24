@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Detail;
 use App\Event;
+use App\Http\Requests\DetailFormRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,7 +17,7 @@ class DetailController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request) {
+    public function store(DetailFormRequest $request) {
         //name, max, datetime
         $input['competition_id'] = $request->input('competition');
         $input['name'] = $request->input('name');
@@ -39,7 +40,7 @@ class DetailController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Request $request, $id) {
+    public function destroy(DetailFormRequest $request, $id) {
         $event = Event::find($request->input('event'));
         $detail = Detail::find($id);
         if ($detail && $event->user_id == $request->user()->id) {

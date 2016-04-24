@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Discount;
 use App\Event;
+use App\Http\Requests\DiscountFormRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 class DiscountController extends Controller
 {
     //
-    public function destroy(Request $request, $id) {
+    public function destroy(DiscountFormRequest $request, $id) {
         $event = Event::find($request->input('event'));
         $discount = Discount::find($id);
         if ($discount && $event->user_id == $request->user()->id) {
@@ -25,7 +26,7 @@ class DiscountController extends Controller
         return Redirect::back()->with(['tabName' => 'discounts']);
     }
 
-    public function store(Request $request)
+    public function store(DiscountFormRequest $request)
     {
         $input['event_id'] = $request->input('event');
         $input['type'] = $request->input('type');
