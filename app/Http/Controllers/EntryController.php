@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Discount;
 use App\Event;
 use App\Entry;
 use App\Detail;
@@ -153,7 +154,6 @@ class EntryController extends Controller
         $event = Event::findOrFail($data['event_id']);
         $compSubTotal = 0;
         $extraSubTotal = 0;
-        $total = 0;
 
         //Format the competitions for display in the confirmation form
         $entries = array();
@@ -167,45 +167,102 @@ class EntryController extends Controller
             }
         }
 
+        //Format the extras for display in the confirmation form
         $extras = array();
-        foreach ($data['extras'] as $extra_id => $extraOrder) {
-            $multiple = 1;
-            $infoRequired = NULL;
-            if (is_string($extraOrder) == False) {
-                //This is an extra order with an array of info
-                if(array_key_exists('multiple',$extraOrder)) {
-                    $multiple = $extraOrder['multiple'];
+        if (key_exists('extras',$data)) {
+            foreach ($data['extras'] as $extra_id => $extraOrder) {
+                $multiple = 1;
+                $infoRequired = NULL;
+                if (is_string($extraOrder) == False) {
+                    //This is an extra order with an array of info
+                    if (array_key_exists('multiple', $extraOrder)) {
+                        $multiple = $extraOrder['multiple'];
+                    }
+                    if (array_key_exists('infoRequired', $extraOrder)) {
+                        $infoRequired = $extraOrder['infoRequired'];
+                    }
                 }
-                if(array_key_exists('infoRequired',$extraOrder)) {
-                    $infoRequired = $extraOrder['infoRequired'];
+                $extra = Extra::findOrFail($extra_id);
+                $thisExtraTotal = $extra->cost * $multiple;
+                $extraSubTotal += $thisExtraTotal;
+                $extras[$extra_id] = array('id' => $extra_id, 'multiple' => $multiple, 'infoRequired' => $infoRequired, 'extra' => $extra, 'thisExtraCost' => $thisExtraTotal);
+            }
+        }
+
+        //Format the discounts so that the fixed and percentage discounts
+        //can be applied separately, fixed first.
+        $discounts = array();
+        $fixedDiscounts = array();
+        $percentageDiscounts = array();
+        if (key_exists('discounts',$data)) {
+            foreach ($data['discounts'] as $discount_id => $discountApply) {
+                if ($discountApply == 1) {
+                    $discount = Discount::findOrFail($discount_id);
+                    $discounts[] = $discount;
                 }
             }
-            $extra = Extra::findOrFail($extra_id);
-            $thisExtraTotal = $extra->cost * $multiple;
-            $extraSubTotal += $thisExtraTotal;
-            $extras[$extra_id] = array('multiple' => $multiple, 'infoRequired' => $infoRequired, 'extra' => $extra, 'thisExtraCost' => $thisExtraTotal);
+            $discounts = collect($discounts);
+            $fixedDiscounts = $discounts->where('type','fixed');
+            $percentageDiscounts = $discounts->where('type', 'percentage');
+        }
+
+
+        //total (just competitions and extras)
+        $compExtraSubtotal = $compSubTotal + $extraSubTotal;
+
+        //Apply any discounts to the compextrasubtotal & registration fee
+        //fixed fees first, then %.
+        $discountedSubtotal = $compExtraSubtotal;
+        $discountedRegistrationFee = $event->registrationFee;
+        $percentageDiscountValues = array();
+        foreach ($fixedDiscounts as $fd) {
+            $discountedSubtotal = $discountedSubtotal - $fd->value;
+        }
+        foreach ($percentageDiscounts as $pd) {
+            $percentage = $pd->value / 100;
+            $discount = $discountedSubtotal * $percentage;
+            $percentageDiscountValues[$pd->id] = $discount;
+            $discountedSubtotal = $discount;
+            $discountedRegistrationFee = $discountedRegistrationFee * $percentage;
         }
 
         //Charge a late entry fee? //if it's past the closing date
         $lateEntryFee = 0;
         if (Carbon::now()->gt($event->closingDate)) {
             $lateEntryFee = $event->lateEntriesFee;
-        } 
+        }
 
-        //Registration fees
-        $regFeesTotal = $event->registrationFee + 3.50;
-
-        //total
-        $total = $compSubTotal + $extraSubTotal + $regFeesTotal + $lateEntryFee;
+        $finalsubtotal = $discountedSubtotal + $discountedRegistrationFee + $lateEntryFee + 3.50;
 
         //paypal fees (3.4% + 20p)
-        $paypalFees = ($total * 0.034) + 0.2;
+        $paypalFees = ($finalsubtotal * 0.034) + 0.2;
 
-        //Grand total (including paypal fees);
-        $grandTotal = $total + $paypalFees;
+        $feesTotal = $discountedRegistrationFee + $lateEntryFee + 3.50 + $paypalFees;
+
+        $grandTotal = $finalsubtotal + $paypalFees;
 
         $format = "%4.2f";
-        return view('events.entryconfirm')->with(['entrydata' => $data, 'event' => $event, 'user' => $user, 'entries' => $entries, 'extras' => $extras, 'compSubTotal' => sprintf($format,$compSubTotal), 'extraSubTotal' => sprintf($format,$extraSubTotal), 'paypalFees' => sprintf($format,$paypalFees), 'lateEntriesFee' => sprintf($format,$lateEntryFee), 'grandTotal' => sprintf($format, $grandTotal), 'registrationFees' => sprintf($format, $regFeesTotal)]);
+        $variables = array(
+            'entrydata' => $data,
+            'event' => $event,
+            'user' => $user,
+            'entries' => $entries,
+            'extras' => $extras,
+            'fixedDiscounts' => $fixedDiscounts,
+            'percentageDiscounts' => $percentageDiscounts,
+            'percentageDiscountValues' => $percentageDiscountValues,
+            'compSubTotal' => sprintf($format,$compSubTotal),
+            'extraSubTotal' => sprintf($format,$extraSubTotal),
+            'compExtraSubtotal' => sprintf($format,$compExtraSubtotal),
+            'discountedSubtotal' => sprintf($format,$discountedSubtotal),
+            'discountedRegistrationFee' => sprintf($format,$discountedRegistrationFee),
+            'lateEntryFee' => sprintf($format,$lateEntryFee),
+            'paypalFees' => sprintf($format,$paypalFees),
+            'feesTotal' => sprintf($format, $feesTotal),
+            'grandTotal' => sprintf($format, $grandTotal),
+        );
+        //dd($variables);
+        return view('events.entryconfirm')->with($variables);
     }
 
     /**

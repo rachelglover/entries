@@ -35,16 +35,25 @@
                             <tr><td class="bold">{{ $thisCompetitor->lastname }}, {{ $thisCompetitor->firstname }}</td>
                                 <td class="center">{{$thisCompetitor->id}}</td>
                                 @foreach ($event->competitions()->get() as $competition)
+                                    <td class="center">
+                                        @foreach ($compEntries as $entry)
+                                            @if ($entry->competition_id == $competition->id)
+                                                <i class="fa fa-check"></i>
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    {{--
                                     @foreach ($compEntries as $entry)
                                         {{! $comps = $entry->competition()->get() }}
                                         @foreach ($comps as $comp)
+                                            <td class="center">
                                             @if ($comp->id == $competition->id)
-                                                <td class="center"><i class="fa fa-check"></i></td>
-                                            @else
-                                                <td></td>
+                                                <i class="fa fa-check"></i>
                                             @endif
+                                            </td>
                                         @endforeach
                                     @endforeach
+                                    --}}
                                 @endforeach
                             </tr>
                         @endforeach

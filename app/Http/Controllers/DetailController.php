@@ -40,7 +40,7 @@ class DetailController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(DetailFormRequest $request, $id) {
+    public function destroy(Request $request, $id) {
         $event = Event::find($request->input('event'));
         $detail = Detail::find($id);
         if ($detail && $event->user_id == $request->user()->id) {

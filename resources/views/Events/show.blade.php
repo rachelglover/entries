@@ -30,7 +30,7 @@
         @include('flash::message')
         <div class="row">
             <section>
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     <div class="project owl-carousel">
                         <div class="item">
                             {{! $image = 'img/events/' . $event->imageFilename }}
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <div class="project-more">
                         <h4>Organiser</h4>
                         <p>{{ $event->getOrganiserName() }}</p>
@@ -118,7 +118,7 @@
                                             {{ $competition->description }}
                                         </td>
                                         <td>
-                                            £{{ $competition->fee }}
+                                            £{{ sprintf('%.02f',$competition->fee) }}
                                         </td>
                                         <td>
                                             <?php $availability = 0 ?>
@@ -183,8 +183,8 @@
                                             @endif
                                             @if ($question->answerType == "boolean")
                                                 <select name="questions[{{$question->id}}]" class="form-control">
-                                                    <option value="yes">Yes</option>
                                                     <option value="no">No</option>
+                                                    <option value="yes">Yes</option>
                                                 </select>
                                             @endif
                                             @if ($question->answerType == "date")
@@ -225,7 +225,7 @@
                                             {{$extra->name}}
                                         </td>
                                         <td>
-                                            £{{$extra->cost}}
+                                            £{{sprintf('%.02f',$extra->cost)}}
                                         </td>
                                         <td>
                                             Order: <input type="checkbox" name="extras[{{$extra->id}}]" id="extra-checkbox" value="{{$extra->cost}}">

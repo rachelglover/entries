@@ -15,7 +15,6 @@
     return view('welcome');
 });*/
 
-//TEST CODE FOR PAYMENT GATEWAY
 
 
 
@@ -36,11 +35,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/home', 'HomeController@index');
     Route::get('/', 'HomeController@index');
 
-    //Static pages
+//Static pages
     Route::get('about','PagesController@about');
     Route::get('contact','PagesController@contact');
     Route::get('faq', 'PagesController@faq');
     Route::get('terms', 'PagesController@terms');
+
 
     //Events
     Route::get('events/{events}/admin', 'EventsController@admin');

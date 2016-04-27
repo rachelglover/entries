@@ -15,7 +15,7 @@
                             <input type="hidden" class="form-control" name="event" value="{{ $event->id }}">
                         </div>
                         <div class="form-group">
-                            <label for="for" class="control-label">Who's the discount for?</label><small> e.g. Juniors, Students, Veterans</small>
+                            <label for="for" class="control-label">Who's the discount for?</label><small> e.g. Juniors, Students, Members</small>
                             <input type="text" class="form-control" name="for">
                         </div>
                         <div class="form-group">

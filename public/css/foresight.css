@@ -87,3 +87,7 @@ label {
 .pinterest {
     color: #000;
 }
+
+.panel-body {
+    overflow-x: scroll;
+}
