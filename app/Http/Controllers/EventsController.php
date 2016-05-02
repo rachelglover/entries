@@ -77,12 +77,13 @@ class EventsController extends Controller
         //$event = Event::findOrFail($id);
         $event = Event::where('slug', '=', $slug)->firstOrFail();
         $user = Auth::user();
+        $guest = Auth::guest();
         $preview = 'false';
         if ($event->status == "unpublished") {
             $preview = 'true';
         }
         $chart = $this->produceCompetitionsFilledchart($event->competitions()->get());
-        return view('events.show')->with(['event' => $event, 'user' => $user, 'preview' => $preview, 'chart' => $chart]);
+        return view('events.show')->with(['event' => $event, 'user' => $user, 'preview' => $preview, 'chart' => $chart, 'guest' => $guest]);
     }
 
     /**

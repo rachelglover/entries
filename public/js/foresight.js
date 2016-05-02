@@ -60,6 +60,7 @@ $(function() {
     });
 });
 
+//date picker for the entry form - earliest date = 1900
 $(function() {
     $('#questionDate').datetimepicker({
         format: 'YYYY-M-D'
@@ -183,5 +184,4 @@ $(document).ready(function() {
 
     });
 });
-
 

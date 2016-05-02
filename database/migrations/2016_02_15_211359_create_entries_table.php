@@ -18,6 +18,7 @@ class CreateEntriesTable extends Migration
             $table->integer('event_id')->unsigned();
             $table->integer('competition_id')->unsigned();
             $table->integer('detail_id')->unsigned();
+            $table->integer('transaction_id')->defaultValue('NULL')->unsigned();
             $table->string('paymentStatus', 255);
             $table->string('user_lastname',255);
             $table->timestamps();
@@ -25,22 +26,27 @@ class CreateEntriesTable extends Migration
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events')
-                ->onDelete('cascade');
+                ->onDelete('no action');
             //Relationship between entry and detail_id
             $table->foreign('detail_id')
                 ->references('id')
                 ->on('details')
-                ->onDelete('cascade');
+                ->onDelete('no action');
             //Relationship between entry and user_id
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('cascade');
+                ->onDelete('no action');
             //Relationship between entry and competition
             $table->foreign('competition_id')
                 ->references('id')
                 ->on('competitions')
-                ->onDelete('cascade');
+                ->onDelete('no action');
+            //Relationship between entry and transaction
+            $table->foreign('transaction_id')
+                ->references('id')
+                ->on('transactions')
+                ->onDelete('no action');
         });
     }
 

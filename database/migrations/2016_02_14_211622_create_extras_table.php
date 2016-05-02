@@ -25,7 +25,7 @@ class CreateExtrasTable extends Migration
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events')
-                ->onDelete('cascade'); //delete events if user deletes account
+                ->onDelete('no action'); //don't delete events if user deletes account
         });
     }
 

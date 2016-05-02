@@ -95,6 +95,7 @@ class EventsTableSeeder extends Seeder
             $event = Event::findOrFail($event_id);
             foreach ($event->competitions()->get() as $competition) {
                 $users = User::all()->keyBy('id');
+                $users->forget(1);
                 $details = $competition->details()->get();
                 $detail = $details->random();
                 for ($e=0; $e < rand(1,20); $e++) {

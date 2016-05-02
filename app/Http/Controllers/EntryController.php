@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Omnipay\Omnipay;
 
 class EntryController extends Controller
@@ -53,7 +54,7 @@ class EntryController extends Controller
     public function store(Request $request) {
         // Get the data from the request
         $data = $request->all();
-        dd($data);
+        //dd($data);
         $user = Auth::user();
 
         //1. Insert each competition entry into the database with 'unpaid' status
@@ -73,37 +74,42 @@ class EntryController extends Controller
         }
         
         //2. Insert question answers in to answers table
-        foreach ($data['questions'] as $question_id => $question_answer) {
-            $answerData = array();
-            $answerData['question'] = $question_id;
-            $answerData['competitor'] = $user->id;
-            $answerData['event'] = $data['event_id'];
-            if ($question_answer) {
-                $answerData['answer'] = $question_answer;
-            } //if "" then default will be "No answer given" as per schema.
-            
-            //create the answer
-            //dd($answerData);
-            Answer::create($answerData);
+        if (key_exists('questions',$data)) {
+            foreach ($data['questions'] as $question_id => $question_answer) {
+                $answerData = array();
+                $answerData['question'] = $question_id;
+                $answerData['competitor'] = $user->id;
+                $answerData['event'] = $data['event_id'];
+                if ($question_answer) {
+                    $answerData['answer'] = $question_answer;
+                } //if "" then default will be "No answer given" as per schema.
+
+                //create the answer
+                //dd($answerData);
+                Answer::create($answerData);
+            }
         }
 
         //3. Insert any extras that have been ordered into orders table
         //dd($data['extras']);
-        foreach ($data['extras'] as $extra_id => $extraOrder) {
-            $orderData = array();
-            $orderData['extra_id'] = $extra_id;
-            $orderData['user_id'] = $user->id;
-            if ($extraOrder != "order") {
-                //This is an extra order with an array of info
-                if(array_key_exists('multiple',$extraOrder)) {
-                    $orderData['multiple'] = $extraOrder['multiple'];
+        if (key_exists('extras',$data)) {
+            foreach ($data['extras'] as $extra_id => $extraOrder) {
+                $orderData = array();
+                $orderData['extra_id'] = $extra_id;
+                $orderData['event_id'] = $data['event_id'];
+                $orderData['user_id'] = $user->id;
+                if ($extraOrder != "order") {
+                    //This is an extra order with an array of info
+                    if(array_key_exists('multiple',$extraOrder)) {
+                        $orderData['multiple'] = $extraOrder['multiple'];
+                    }
+                    if(array_key_exists('infoRequired',$extraOrder)) {
+                        $orderData['infoRequired'] = $extraOrder['infoRequired'];
+                    }
                 }
-                if(array_key_exists('infoRequired',$extraOrder)) {
-                    $orderData['infoRequired'] = $extraOrder['infoRequired'];
-                }
+                //create the extra order
+                ExtraOrder::create($orderData);
             }
-            //create the extra order
-            ExtraOrder::create($orderData);
         }
 
         //4. Send off the payment request to paypal (success=success, fail=delete above)
@@ -269,6 +275,7 @@ class EntryController extends Controller
      * User is returned successfully from Paypal after paying their fees. 
      */
     public function postPaypalComplete( Request $request, $event_id) {
+
         //Complete the transaction
         $complete = $this->gateway->completePurchase(
             array(
@@ -278,14 +285,19 @@ class EntryController extends Controller
         );
         $response = $complete->send();
         $data = $response->getData();
-
+        //dd($data);
         //payment approved
         $user = Auth::user();
         if ($data['state'] === 'approved') {
-            //Change entry status to 'paid' and then redirect. 
-            $entry = Entry::find()->where('competitor','=',$user->id)->where('event','=',$event_id)->get();
+            //Change all the entries to paid
+            $entries = DB::table('entries')->where('user_id','=',$user->id)->where('event_id','=',$event_id);
+            foreach ($entries as $entry) {
+                $entry->paymentStatus = 'paid';
+                $entry->save();
+            }
 
             \Flash::success('Thank you, your payment was successful and you will find all of your current entries below.');
+            return redirect(action('PagesController@userEntries'));
         }
     }
 

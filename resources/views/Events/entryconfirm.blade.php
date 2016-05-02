@@ -144,27 +144,8 @@
 
 												<!-- T&Cs and enter button -->
 												<div class="text-right">
-													<table>
-														<tr>
-															<td width="30%"></td>
-															<td>
-																<small>We'd like to send you an email occasionally with events you might be interested in. If this is OK please tick the box.</small>
-															</td>
-															<td width="5%" class="center"><input type="checkbox" value="1" name="contactable"></td>
-														</tr>
-														<tr>
-															<td></td>
-															<td>
-																I accept the <a href=" {{ action('PagesController@terms') }} " target="_blank">Terms and Conditions  </a>
-															</td>
-															<td class="center"><input type="checkbox" value="1" id="terms"></td>
-														</tr>
-														<tr>
-															<td colspan="3">
-																<button id="enterpay" type="submit" value="Enter" class="btn btn-success pull-right" disabled>Enter and pay</button>
-															</td>
-														</tr>
-													</table>
+												I accept the <a href=" {{ action('PagesController@terms') }} " target="_blank">Terms and Conditions  </a><input type="checkbox" value="1" id="terms"><br/>
+													<button id="enterpay" type="submit" value="Enter" class="btn btn-success" disabled>Enter and pay</button>
 												</div>
 						</form>
 					</div>

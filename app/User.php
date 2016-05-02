@@ -28,6 +28,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function entries() {
         return $this->hasMany('App\Entry');
     }
+
+    /**
+     * User has multiple entries to one event
+     */
+    public function eventEntries($event_id) {
+        $entries = $this->hasMany('App\Entry');
+        $eventEntries = array();
+        foreach ($entries as $entry) {
+            if ($entry->event_id == $event_id) {
+                $eventEntries[] = $entry;
+            }
+        }
+        return collect($eventEntries);
+    }
     
     
     /**

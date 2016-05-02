@@ -36,7 +36,7 @@ class CreateEventsTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('cascade'); //delete events if user deletes account
+                ->onDelete('no action'); //don't delete events if user deletes account
         });
 
         //Note on the migrate::refresh foreign key issue. The migrations happen in the order

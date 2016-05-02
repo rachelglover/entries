@@ -22,9 +22,9 @@ class CreateTagsTable extends Migration
         //pivot table to do connections between events and tags
         Schema::create('event_tag', function(Blueprint $table) {
             $table->integer('event_id')->unsigned()->index();
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('no action');
             $table->integer('tag_id')->unsigned()->index();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('no action');
             $table->timestamps();
         });
     }

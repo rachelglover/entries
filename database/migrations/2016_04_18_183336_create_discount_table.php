@@ -23,7 +23,7 @@ class CreateDiscountTable extends Migration
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events')
-                ->onDelete('cascade'); //delete discount if user deletes event
+                ->onDelete('no action'); //don't delete discount if user deletes event
         });
     }
 

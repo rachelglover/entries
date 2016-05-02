@@ -83,7 +83,7 @@ Route::group(['middleware' => ['web']], function () {
 
     //Entries
     Route::post('/entry/add', 'EntryController@store');
-    Route::post('/entry/paid/{event}', 'EntryController@postPaypalComplete');
+    Route::get('/entry/paid/{event}', 'EntryController@postPaypalComplete');
     Route::post('/entry/cancelled/{event}', 'EntryController@postPaypalCancelled');
     Route::post('/entry/confirm' , 'EntryController@confirmEntry');
 

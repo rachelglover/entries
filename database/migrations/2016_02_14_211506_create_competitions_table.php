@@ -23,7 +23,7 @@ class CreateCompetitionsTable extends Migration
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events')
-                ->onDelete('cascade'); //delete competition if user deletes event
+                ->onDelete('no action'); //don't delete competition if user deletes event
         });
     }
 

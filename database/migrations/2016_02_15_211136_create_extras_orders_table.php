@@ -24,17 +24,17 @@ class CreateExtrasOrdersTable extends Migration
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events')
-                ->onDelete('cascade'); //delete events if user deletes account
+                ->onDelete('no action'); //don't delete events if user deletes account
             //Relationship between extra order and extra ID
             $table->foreign('extra_id')
                 ->references('id')
                 ->on('extras')
-                ->onDelete('cascade');
+                ->onDelete('no action');
             //Relationship between extra order and user ID
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('cascade');
+                ->onDelete('no action');
         });
     }
 
