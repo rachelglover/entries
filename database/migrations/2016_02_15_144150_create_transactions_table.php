@@ -16,10 +16,10 @@ class CreateTransactionsTable extends Migration
             $table->increments('id');
             $table->integer('event_id')->unsigned();
             $table->integer('user_id')->unsigned();
+            $table->string('transaction_type'); // 'competitor_payment','organiser_transfer','competitor_refund'
             $table->string('cart');
             $table->string('payment_method');
             $table->string('status');
-            $table->string('email');
             $table->float('total');
             $table->string('currency');
             $table->float('transaction_fee');

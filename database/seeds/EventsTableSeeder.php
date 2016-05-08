@@ -105,6 +105,7 @@ class EventsTableSeeder extends Seeder
                         'event_id' => $event_id,
                         'competition_id' => $competition->id,
                         'detail_id' => $detail->id,
+                        'transaction_id' => null,
                         'user_lastname' => $user->lastname,
                         'paymentStatus' => 'paid',
                     ]);

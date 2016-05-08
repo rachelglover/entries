@@ -10,6 +10,7 @@ use App\Competition;
 use App\Answer;
 use App\ExtraOrder;
 use App\Extra;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -288,18 +289,56 @@ class EntryController extends Controller
         //dd($data);
         //payment approved
         $user = Auth::user();
+        $event = Event::findOrFail($event_id);
         if ($data['state'] === 'approved') {
             //Change all the entries to paid
-            $entries = DB::table('entries')->where('user_id','=',$user->id)->where('event_id','=',$event_id);
+            $entries = $user->eventEntries($event_id);
             foreach ($entries as $entry) {
                 $entry->paymentStatus = 'paid';
                 $entry->save();
             }
 
+           $transaction = array(
+                'event_id' => $event_id,
+                'user_id' => $user->id,
+                'transaction_type' => 'competitor_payment',
+                'cart' => $data['cart'],
+                'payment_method' => $data['payer']['payment_method'],
+                'status' => $data['state'],
+                'total' => $data['transactions'][0]['amount']['total'],
+                'currency' => $data['transactions'][0]['amount']['currency'],
+                'transaction_fee' => $data['transactions'][0]['related_resources'][0]['sale']['transaction_fee']['value'],
+
+            );
+
+            Transaction::create($transaction);
+
+
             \Flash::success('Thank you, your payment was successful and you will find all of your current entries below.');
             return redirect(action('PagesController@userEntries'));
+        } elseif ($data['state'] === 'failed') {
+            //Delete the user entry and leave message
+            $entries_to_delete = $user->eventEntries($event_id);
+            foreach ($entries_to_delete as $entry) {
+                $entry->delete();
+            }
+            \Flash::error('Unfortunately your payment failed. Your entry to this event has *not* been completed. If you still want to proceed, please enter again.');
+            return redirect(action('EventsController@show', $event->slug));
         }
     }
 
+    /**
+     * If the entry is cancelled by the user at paypal login page.
+     */
+    public function postPaypalCancelled( Request $request, $event_id) {
+        $user = Auth::user();
+        $entries_to_delete = $user->eventEntries($event_id);
+        foreach ($entries_to_delete as $entry) {
+            $entry->delete();
+        }
+        \Flash::info("We're sorry you changed your mind and cancelled your payment (your entry to this event was *not* completed). We've brought you back to the event entry page in case you still want to enter.");
+        $event = Event::findOrFail($event_id);
+        return redirect(action('EventsController@show', $event->slug));
+    }
     
 }

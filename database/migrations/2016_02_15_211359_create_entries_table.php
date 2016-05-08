@@ -18,7 +18,7 @@ class CreateEntriesTable extends Migration
             $table->integer('event_id')->unsigned();
             $table->integer('competition_id')->unsigned();
             $table->integer('detail_id')->unsigned();
-            $table->integer('transaction_id')->defaultValue('NULL')->unsigned();
+            $table->integer('transaction_id')->default(null)->unsigned()->nullable();
             $table->string('paymentStatus', 255);
             $table->string('user_lastname',255);
             $table->timestamps();

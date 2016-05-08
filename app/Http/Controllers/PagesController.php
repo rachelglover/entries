@@ -37,17 +37,30 @@ class PagesController extends Controller
         return view('pages.faq');
     }
 
-    // List user-created events
+    /**
+     * Page for the users' events.
+     * @return mixed
+     */
     public function userEvents() {
         $user = Auth::user();
         return view('user.events')->with(['user' => $user]);
     }
 
-    // List user entries
+    /**
+     * Page for the users' entries.
+     * @return mixed
+     */
     public function userEntries() {
         $user = Auth::user();
-        return view('user.entries')->with(['user' => $user]);
+        $event_ids = $user->entries()->pluck('event_id')->unique();
+        $eventsarray = array();
+        foreach ($event_ids as $event_id) {
+            $eventsarray[] = Event::findOrFail($event_id);
+        }
+        $events = collect($eventsarray);
+        return view('user.entries')->with(['user' => $user, 'events' => $events]);
     }
+    
 
     /**
      * @param Request $request

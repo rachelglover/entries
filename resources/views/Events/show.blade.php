@@ -30,7 +30,7 @@
         @include('flash::message')
         <div class="row">
             <section>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <div class="project owl-carousel">
                         <div class="item">
                             {{! $image = 'img/events/' . $event->imageFilename }}
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="project-more">
                         <h4>Organiser</h4>
                         <p>{{ $event->getOrganiserName() }}</p>
@@ -99,9 +99,11 @@
                         </div>
                     @else
                         {{-- The user is logged in --}}
-                        @if ($user->eventEntries($event->id)->count() > 0)
+                        {{! $userEntries = $user->eventEntries($event->id, $user->id) }}
+                        @if ($userEntries->count() > 0)
                             {{-- The user has already entered this event, summarize their entries --}}
-                            {{ $user->eventEntries($event->id) }}
+                            <div>You've already entered this event. Information about your entries can be found in <a href="{{action('PagesController@userEntries')}}">your account</a>.
+                            </div>
                         @else
                             {{-- The user can enter the competition --}}
                             <form method="post" action="{{ action('EntryController@confirmEntry') }}">
@@ -176,7 +178,7 @@
                                 </div>
                             </div>
                             @endif
-                        @endif
+
 
                         <!-- Custom questions that the organiser wants the user answer -->
                         @if ($event->questions()->get()->count() > 0)
@@ -322,7 +324,6 @@
 
                             </div>
                         </div>
-
                         <input type="hidden" name="event_id" value="{{$event->id}}">
 
                         <!-- submit form -->
@@ -332,6 +333,8 @@
                             <button type="submit" value="Enter" class="btn btn-success pull-right"><i class="fa fa-dot-circle-o"></i> Confirm and Pay</button>
                         @endif
                         </form>
+                        @endif {{-- end of if/else for whether user has entered --}}
+
                     @endif {{--end if Auth::guest() --}}
                 </div>
             </section>

@@ -14,6 +14,7 @@
 <!-- Start of the main content -->  
 <div id="content">
     <div class="container">
+        @include('flash::message')
         <div class="col-lg-12">
             <table class="table table-striped">
                 <thead>

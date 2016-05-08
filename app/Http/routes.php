@@ -44,10 +44,6 @@ Route::group(['middleware' => ['web']], function () {
 
     //Events
     Route::get('events/{events}/admin', 'EventsController@admin');
-    Route::get('events/{events}/admin/competitors', 'EventsController@adminCompetitors');
-    Route::get('events/{events}/admin/finance', 'EventsController@adminFinance');
-    Route::get('events/{events}/admin/entries', 'EventsController@adminEntries');
-    Route::get('events/{events}/admin/extras', 'EventsController@adminExtras');
     Route::resource('events','EventsController');
     //This is in pagescontroller because of the specific eventrequest that has
     //required fields - putting the publish method in pagescontroller gets around this
@@ -84,7 +80,7 @@ Route::group(['middleware' => ['web']], function () {
     //Entries
     Route::post('/entry/add', 'EntryController@store');
     Route::get('/entry/paid/{event}', 'EntryController@postPaypalComplete');
-    Route::post('/entry/cancelled/{event}', 'EntryController@postPaypalCancelled');
+    Route::get('/entry/cancelled/{event}', 'EntryController@postPaypalCancelled');
     Route::post('/entry/confirm' , 'EntryController@confirmEntry');
 
     //Route::get('/gatewatest', 'PagesController@home');
