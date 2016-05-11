@@ -85,7 +85,7 @@
 
             <section>
 
-                <!-- @todo This needs to only show up for logged in users, else show a link to register or login -->
+
                 <div class="col-sm-12">
                     <div class="heading">
                         <h3>Enter</h3>
@@ -100,84 +100,93 @@
                     @else
                         {{-- The user is logged in --}}
                         {{! $userEntries = $user->eventEntries($event->id, $user->id) }}
-                        @if ($userEntries->count() > 0)
-                            {{-- The user has already entered this event, summarize their entries --}}
-                            <div>You've already entered this event. Information about your entries can be found in <a href="{{action('PagesController@userEntries')}}">your account</a>.
-                            </div>
-                        @else
-                            {{-- The user can enter the competition --}}
-                            <form method="post" action="{{ action('EntryController@confirmEntry') }}">
-                            <input type="hidden" class="form-control" name="_token" value="{{ csrf_token() }}">
-                            <!-- Competitions and details -->
-                            <!-- the if shouldn't be necessary but until I get the publish checks in place
-                            then it has to stay -->
-                            @if ($event->competitions()->get())
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">Enter competitions</div>
-                                <div class="panel-body">
-                                    <p>Please select the competitions you wish to enter.</p>
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                        <th width="20%">Competition</th>
-                                        <th width="25%">Description</th>
-                                        <th width="15%">Entry fee</th>
-                                        <th width="15%">Availability</th>
-                                        <th width="35%">Enter</th>
-                                        </thead>
+                        @if ($event->closingDate->lt(\Carbon\Carbon::now('Europe/London')))
+                            @if ($event->lateEntries == 1)
+                                @if ($userEntries->count() > 0)
+                                    {{-- The user has already entered this event, summarize their entries --}}
+                                    <div>You've already entered this event. Information about your entries can be found in <a href="{{action('PagesController@userEntries')}}">your account</a>.
+                                    </div>
+                                @else
+                                    {{-- The user can enter the competition --}}
+                                    <form method="post" action="{{ action('EntryController@confirmEntry') }}">
+                                    <input type="hidden" class="form-control" name="_token" value="{{ csrf_token() }}">
+                                    <!-- Competitions and details -->
+                                    <!-- the if shouldn't be necessary but until I get the publish checks in place
+                                    then it has to stay -->
+                                    @if ($event->competitions()->get())
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Enter competitions</div>
+                                        <div class="panel-body">
+                                            <p>Please select the competitions you wish to enter.</p>
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                <th width="20%">Competition</th>
+                                                <th width="25%">Description</th>
+                                                <th width="15%">Entry fee</th>
+                                                <th width="15%">Availability</th>
+                                                <th width="35%">Enter</th>
+                                                </thead>
 
-                                        <tbody>
-                                        @foreach ($event->competitions()->get() as $competition)
-                                            <tr>
-                                                <td>
-                                                    {{ $competition->name }}
-                                                </td>
-                                                <td>
-                                                    {{ $competition->description }}
-                                                </td>
-                                                <td>
-                                                    £{{ sprintf('%.02f',$competition->fee) }}
-                                                </td>
-                                                <td>
-                                                    <?php $availability = 0 ?>
-                                                    @foreach ($competition->details()->get() as $detail)
-                                                        <?php $entries = count($detail->entries()->get());
-                                                        $availability = $availability + ($detail->max - $entries); ?>
-                                                    @endforeach
-
-                                                    {{ $availability }} places left
-                                                </td>
-                                                <td>
-                                                    <table>
-
-                                                        <select name="competitions[{{$competition->id}}]" class="form-control input-sm">
-                                                            <option value="noEntry">Select a detail to enter...</option>
+                                                <tbody>
+                                                @foreach ($event->competitions()->get() as $competition)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $competition->name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $competition->description }}
+                                                        </td>
+                                                        <td>
+                                                            £{{ sprintf('%.02f',$competition->fee) }}
+                                                        </td>
+                                                        <td>
+                                                            <?php $availability = 0 ?>
                                                             @foreach ($competition->details()->get() as $detail)
-                                                                    <!-- work out places left -->
-                                                            <!-- $left = $detail->max - $entries->details($detail->id) -->
-                                                            <!-- not elegant but required to do the calculation -->
-                                                            <?php $entries = count($detail->entries()->get());
-                                                                $left = $detail->max - $entries; ?>
+                                                                <?php $entries = count($detail->entries()->get());
+                                                                $availability = $availability + ($detail->max - $entries); ?>
+                                                            @endforeach
 
-                                                            @if ($left > 1)
-                                                                    <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} places left</option>
-                                                            @endif
-                                                            @if ($left == 1)
-                                                                    <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} place left</option>
-                                                        @endif
-                                                            @if ($left == 0)
-                                                                    <option value="{{$detail->id}}" disabled>{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | FULL</option>
-                                                        @endif
-                                                                @endforeach
-                                                        </select>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            @endif
+                                                            {{ $availability }} places left
+                                                        </td>
+                                                        <td>
+                                                            <table>
+
+                                                                <select name="competitions[{{$competition->id}}]" class="form-control input-sm">
+                                                                    <option value="noEntry">Select a detail to enter...</option>
+                                                                    @foreach ($competition->details()->get() as $detail)
+                                                                        <!-- work out places left -->
+                                                                        <!-- $left = $detail->max - $entries->details($detail->id) -->
+                                                                        <!-- not elegant but required to do the calculation -->
+                                                                        <?php $entries = count($detail->entries()->get());
+                                                                        $left = $detail->max - $entries; ?>
+
+                                                                        @if ($left > 1)
+                                                                            <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} places left</option>
+                                                                        @endif
+                                                                        @if ($left == 1)
+                                                                            <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} place left</option>
+                                                                        @endif
+                                                                        @if ($left == 0)
+                                                                            <option value="{{$detail->id}}" disabled>{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | FULL</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    @endif {{-- if there are competitions to show--}}
+                                @endif {{-- end if num entries > 0--}}
+                            @else
+                                <h3>Entries for this event have closed and the organiser has chosen not to accept late entries.</h3>
+                            @endif {{-- end if late entries are OK --}}
+                        @else
+                            <h3>Entries for this event have closed and the organiser has chosen not to accept late entries.</h3>
+                        @endif {{--end if passed the closing date --}}
 
 
                         <!-- Custom questions that the organiser wants the user answer -->
@@ -333,8 +342,6 @@
                             <button type="submit" value="Enter" class="btn btn-success pull-right"><i class="fa fa-dot-circle-o"></i> Confirm and Pay</button>
                         @endif
                         </form>
-                        @endif {{-- end of if/else for whether user has entered --}}
-
                     @endif {{--end if Auth::guest() --}}
                 </div>
             </section>

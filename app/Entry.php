@@ -15,6 +15,7 @@ class Entry extends Model
         'transaction_id',
         'user_lastname',
         'paymentStatus',
+        'discounts_applied'
     ];
 
     /**
@@ -43,6 +44,13 @@ class Entry extends Model
      */
     public function detail() {
         return $this->belongsTo('App\Detail');
+    }
+
+    /**
+     * Return the transaction
+     */
+    public function transaction() {
+        return $this->belongsTo('App\Transaction');
     }
 
 }

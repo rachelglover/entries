@@ -36,4 +36,14 @@ class Detail extends Model
     public function entries() {
         return $this->hasMany('App\Entry');
     }
+
+    /**
+     * Return the number of free places on this detail
+     */
+    public function placesLeft() {
+        $entries = Entry::where('detail_id','=',$this->id);
+        $numEntries = $entries->count();
+        $left = $this->max - $numEntries;
+        return $left;
+    }
 }

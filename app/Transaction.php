@@ -11,7 +11,7 @@ class Transaction extends Model
         'event_id',
         'user_id',
         'transaction_type', // 'competitor_payment','organiser_transfer','competitor_refund'
-        'cart',
+        'paypal_sale_id',
         'payment_method',
         'status',
         'total',

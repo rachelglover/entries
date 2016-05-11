@@ -121,32 +121,33 @@
 							<!-- Loop through the entered competitions -->
 							@foreach ($entries as $entry)
 								<input type="hidden" name="competitions[{{ $entry['competition']->id }}]" value="{{ $entry['detail']->id }}">
+							@endforeach
+							<!-- Loop through the answers to questions -->
+							@if (key_exists('questions',$entrydata))
+								@foreach ($entrydata['questions'] as $question_id => $answer)
+									<input type="hidden" name="questions[{{ $question_id }}]" value="{{ $answer }}">
 								@endforeach
-										<!-- Loop through the answers to questions -->
-								@if (key_exists('questions',$entrydata))
-									@foreach ($entrydata['questions'] as $question_id => $answer)
-										<input type="hidden" name="questions[{{ $question_id }}]" value="{{ $answer }}">
-										@endforeach
-										@endif
-												<!-- Loop through the extras -->
-										@foreach ($extras as $extra)
-											<input type="hidden" name="extras[{{$extra['id']}}]" value="{{$extra['thisExtraCost']}}">
-											@if ($extra['multiple'])
-												<input type="hidden" name="extras[{{$extra['id']}}][multiple]" value="{{$extra['multiple']}}">
-											@endif
-											@if ($extra['infoRequired'])
-												<input type="hidden" name="extras[{{$extra['id']}}][infoRequired]" value="{{ $extra['infoRequired'] }}">
-												@endif
-												@endforeach
+							@endif
+							<!-- Loop through the extras -->
+							@foreach ($extras as $extra)
+								<input type="hidden" name="extras[{{$extra['id']}}]" value="{{$extra['thisExtraCost']}}">
+									@if ($extra['multiple'])
+										<input type="hidden" name="extras[{{$extra['id']}}][multiple]" value="{{$extra['multiple']}}">
+									@endif
+									@if ($extra['infoRequired'])
+										<input type="hidden" name="extras[{{$extra['id']}}][infoRequired]" value="{{ $extra['infoRequired'] }}">
+									@endif
+							@endforeach
+							<input type="hidden" name="discounts_applied" value="{{$discounts_applied}}">
 
-														<!-- pass over the pricing info -->
-												<input type="hidden" name="total" value="{{ $grandTotal }}">
+							<!-- pass over the pricing info -->
+							<input type="hidden" name="total" value="{{ $grandTotal }}">
 
-												<!-- T&Cs and enter button -->
-												<div class="text-right">
-												I accept the <a href=" {{ action('PagesController@terms') }} " target="_blank">Terms and Conditions  </a><input type="checkbox" value="1" id="terms"><br/>
-													<button id="enterpay" type="submit" value="Enter" class="btn btn-success" disabled>Enter and pay</button>
-												</div>
+							<!-- T&Cs and enter button -->
+							<div class="text-right">
+								I accept the <a href=" {{ action('PagesController@terms') }} " target="_blank">Terms and Conditions  </a><input type="checkbox" value="1" id="terms"><br/>
+								<button id="enterpay" type="submit" value="Enter" class="btn btn-success" disabled>Enter and pay</button>
+							</div>
 						</form>
 					</div>
 				</div>

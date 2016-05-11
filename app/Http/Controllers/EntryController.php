@@ -59,6 +59,7 @@ class EntryController extends Controller
         $user = Auth::user();
 
         //1. Insert each competition entry into the database with 'unpaid' status
+        
         foreach ($data['competitions'] as $competition_id => $detail_id) {
             if ($detail_id != "noEntry") {
                 $entryData = array();
@@ -68,6 +69,7 @@ class EntryController extends Controller
                 $entryData['detail_id'] = $detail_id;
                 $entryData['user_lastname'] = $user->lastname;
                 $entryData['paymentStatus'] = 'unpaid';
+                $entryData['discounts_applied'] = $data['discounts_applied'];
                 //Now insert the data
                 //dd($entryData);
                 Entry::create($entryData);
@@ -133,7 +135,7 @@ class EntryController extends Controller
             ));
 
             //SO THE BIG QUESTION HERE IS HOW DO I SEND THE PAYMENTS IN BITS TO ME AND 
-            //EVENT ORGANISER?
+            //EVENT ORGANISER? Not right now. I'll do it manually at the closing date. 
 
             $response = $transaction->send();
 
@@ -201,19 +203,19 @@ class EntryController extends Controller
         $discounts = array();
         $fixedDiscounts = array();
         $percentageDiscounts = array();
+        $discounts_applied = "";
         if (key_exists('discounts',$data)) {
             foreach ($data['discounts'] as $discount_id => $discountApply) {
                 if ($discountApply == 1) {
                     $discount = Discount::findOrFail($discount_id);
                     $discounts[] = $discount;
+                    $discounts_applied = $discounts_applied . $discount_id . "-";
                 }
             }
             $discounts = collect($discounts);
             $fixedDiscounts = $discounts->where('type','fixed');
             $percentageDiscounts = $discounts->where('type', 'percentage');
         }
-
-
         //total (just competitions and extras)
         $compExtraSubtotal = $compSubTotal + $extraSubTotal;
 
@@ -267,6 +269,7 @@ class EntryController extends Controller
             'paypalFees' => sprintf($format,$paypalFees),
             'feesTotal' => sprintf($format, $feesTotal),
             'grandTotal' => sprintf($format, $grandTotal),
+            'discounts_applied' => $discounts_applied,
         );
         //dd($variables);
         return view('events.entryconfirm')->with($variables);
@@ -291,30 +294,27 @@ class EntryController extends Controller
         $user = Auth::user();
         $event = Event::findOrFail($event_id);
         if ($data['state'] === 'approved') {
-            //Change all the entries to paid
-            $entries = $user->eventEntries($event_id);
-            foreach ($entries as $entry) {
-                $entry->paymentStatus = 'paid';
-                $entry->save();
-            }
-
-           $transaction = array(
+            $transaction = array(
                 'event_id' => $event_id,
                 'user_id' => $user->id,
                 'transaction_type' => 'competitor_payment',
-                'cart' => $data['cart'],
+                'paypal_sale_id' => $data['transactions'][0]['related_resources'][0]['sale']['id'],
                 'payment_method' => $data['payer']['payment_method'],
                 'status' => $data['state'],
                 'total' => $data['transactions'][0]['amount']['total'],
                 'currency' => $data['transactions'][0]['amount']['currency'],
                 'transaction_fee' => $data['transactions'][0]['related_resources'][0]['sale']['transaction_fee']['value'],
-
             );
+            $savedTransaction = Transaction::create($transaction);
+            //Change all the entries to paid
+            $entries = $user->eventEntries($event_id);
+            foreach ($entries as $entry) {
+                $entry->paymentStatus = 'paid';
+                $entry->transaction_id = $savedTransaction->id;
+                $entry->save();
+            }
 
-            Transaction::create($transaction);
-
-
-            \Flash::success('Thank you, your payment was successful and you will find all of your current entries below.');
+            \Flash::success('Thank you, your payment was successful and your current entries below.');
             return redirect(action('PagesController@userEntries'));
         } elseif ($data['state'] === 'failed') {
             //Delete the user entry and leave message
@@ -340,5 +340,17 @@ class EntryController extends Controller
         $event = Event::findOrFail($event_id);
         return redirect(action('EventsController@show', $event->slug));
     }
-    
+
+    /**
+     * Change the detail for a competition (after the user has entered the event)
+     */
+    public function changeDetail(Request $request, $entry_id) {
+        $data = $request->all();
+        $entry = Entry::findOrFail($entry_id);
+        $entry['detail_id'] = $data['newDetail'];
+        $entry->save();
+        $detail = Detail::findOrFail($data['newDetail']);
+        \Flash::success("No problem! You're detail has been changed to " . $detail->dateTime->toDateTimeString());
+        return redirect(action('PagesController@userEntries'));
+    }
 }

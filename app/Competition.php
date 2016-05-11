@@ -31,4 +31,5 @@ class Competition extends Model
     public function details() {
         return $this->hasMany('App\Detail');
     }
+    
 }

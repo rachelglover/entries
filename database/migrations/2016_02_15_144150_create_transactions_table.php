@@ -17,7 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->integer('event_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->string('transaction_type'); // 'competitor_payment','organiser_transfer','competitor_refund'
-            $table->string('cart');
+            $table->string('paypal_sale_id');
             $table->string('payment_method');
             $table->string('status');
             $table->float('total');
