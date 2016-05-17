@@ -83,6 +83,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/entry/cancelled/{event}', 'EntryController@postPaypalCancelled');
     Route::post('/entry/confirm' , 'EntryController@confirmEntry');
     Route::post('/entry/changeDetail/{entry}','EntryController@changeDetail');
+    Route::post('/entry/cancelCompetition/{entry}', 'EntryController@cancelCompetition');
+    Route::post('/entry/cancelEntireEntry/{event}', 'EntryController@cancelEntireEntry');
 
     //Route::get('/gatewatest', 'PagesController@home');
     //Route::post('/test', 'PagesController@postPaypalSubmit');

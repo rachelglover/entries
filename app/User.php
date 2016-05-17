@@ -30,6 +30,22 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * Should the user see the 'withdraw from the entire event' button?
+     * True: >1 entry with status 'paid'
+     * False: all entries with status 'pending_cancellation' or 'cancelled'
+     */
+    public function showWithdrawFromEventButton($event_id) {
+        $entries = $this->hasMany('App\Entry')->where('event_id','=', $event_id)->get();
+        #dd($entries);
+        foreach ($entries as $entry) {
+            if ($entry->paymentStatus == 'paid') {
+                return True;
+            }
+        }
+        return False;
+    }
+
+    /**
      * User has multiple entries to one event
      */
     public function eventEntries($event_id) {

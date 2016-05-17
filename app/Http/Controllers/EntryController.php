@@ -353,4 +353,31 @@ class EntryController extends Controller
         \Flash::success("No problem! You're detail has been changed to " . $detail->dateTime->toDateTimeString());
         return redirect(action('PagesController@userEntries'));
     }
+    
+    /**
+     * Competitor cancels one competition entry, but not their entire entry to all competitions
+     */
+    public function cancelCompetition(Request $request, $entry_id) {
+        $entry = Entry::findOrFail($entry_id);
+        $entry['paymentStatus'] = 'pending_cancellation';
+        $entry->save();
+        $competition = $entry->competition()->first();
+        \Flash::success("Your entry to " . $competition->name . " was cancelled and you will be refunded within 48 hours.");
+        return redirect(action('PagesController@userEntries'));
+    }
+
+    /**
+     * Competitor cancels all entries for an event
+     */
+    public function cancelEntireEntry(Request $request, $event_id) {
+        $user = Auth::user();
+        $entries = $user->entries()->where('event_id','=',$event_id)->get();
+        foreach ($entries as $entry) {
+            $entry['paymentStatus'] = 'pending_cancellation';
+            $entry->save();
+        }
+        $event = Event::find($event_id);
+        \Flash::success("Your entries to '" . $event->name . "' have been cancelled and you will be refunded within 48 hours.");
+        return redirect(action('PagesController@userEntries'));
+    }
 }
