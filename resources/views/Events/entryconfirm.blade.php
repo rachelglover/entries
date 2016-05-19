@@ -95,7 +95,7 @@
 							<tr>
 								<td>Registration fee
 									<br><small>
-										This consists of a ForesightEntries fee of £3.50
+										This consists of a ForesightEntries fee of £{{$foresightFee}}
 									@if ($event->registration == 1)
 										, a registration fee being charged by the Event organiser of £{{$discountedRegistrationFee}}
 									@endif

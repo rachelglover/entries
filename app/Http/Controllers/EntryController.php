@@ -240,13 +240,15 @@ class EntryController extends Controller
         if (Carbon::now()->gt($event->closingDate)) {
             $lateEntryFee = $event->lateEntriesFee;
         }
+        //FORESIGHT FEE
+        $foresightFee = 2.99;
 
-        $finalsubtotal = $discountedSubtotal + $discountedRegistrationFee + $lateEntryFee + 3.50;
+        $finalsubtotal = $discountedSubtotal + $discountedRegistrationFee + $lateEntryFee + $foresightFee;
 
         //paypal fees (3.4% + 20p)
         $paypalFees = ($finalsubtotal * 0.034) + 0.2;
 
-        $feesTotal = $discountedRegistrationFee + $lateEntryFee + 3.50 + $paypalFees;
+        $feesTotal = $discountedRegistrationFee + $lateEntryFee + $foresightFee + $paypalFees;
 
         $grandTotal = $finalsubtotal + $paypalFees;
 
@@ -270,6 +272,7 @@ class EntryController extends Controller
             'feesTotal' => sprintf($format, $feesTotal),
             'grandTotal' => sprintf($format, $grandTotal),
             'discounts_applied' => $discounts_applied,
+            'foresightFee' => sprintf($format, $foresightFee),
         );
         //dd($variables);
         return view('events.entryconfirm')->with($variables);
