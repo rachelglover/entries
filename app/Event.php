@@ -94,6 +94,16 @@ class Event extends Model
     }
 
     /**
+     * Retrieve all the answers to questions that the organiser
+     * asked of all the competitors.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function answers() {
+        return $this->hasMany('App\Answer');
+    }
+
+    /**
      * Discounts associated with this event
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
