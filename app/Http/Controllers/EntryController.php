@@ -80,9 +80,9 @@ class EntryController extends Controller
         if (key_exists('questions',$data)) {
             foreach ($data['questions'] as $question_id => $question_answer) {
                 $answerData = array();
-                $answerData['question'] = $question_id;
-                $answerData['competitor'] = $user->id;
-                $answerData['event'] = $data['event_id'];
+                $answerData['question_id'] = $question_id;
+                $answerData['competitor_id'] = $user->id;
+                $answerData['event_id'] = $data['event_id'];
                 if ($question_answer) {
                     $answerData['answer'] = $question_answer;
                 } //if "" then default will be "No answer given" as per schema.

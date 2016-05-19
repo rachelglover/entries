@@ -8,9 +8,9 @@ class Answer extends Model
 {
     //
     protected $fillable = [
-    	'question',
-    	'competitor',
-    	'event',
+    	'question_id',
+    	'competitor_id',
+    	'event_id',
     	'answer',
     ];
 }
