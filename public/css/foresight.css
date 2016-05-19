@@ -91,3 +91,11 @@ label {
 .panel-body {
     overflow-x: scroll;
 }
+
+/** admin screen tabs -different colours */
+.tab-competition {
+    background-color: lightgray;
+}
+.tab-detail {
+    padding-left: 20px;
+}

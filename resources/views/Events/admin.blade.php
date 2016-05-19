@@ -62,16 +62,30 @@
                 <h4>Hello {{ $user->firstname }}, welcome to your event dashboard.</h4>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel-group accordion" id="accordionDashboard">
-                    @include('Events.organiser.published.overviewAccordion')
-                    <div style="padding:10px;"><button type="button" class="btn btn-sm btn-template-main"><a href="#">Download all data (<i class="fa fa-file-excel-o"></i>Excel)</a></button></div>
-                    @include('Events.organiser.published.competitionsAccordion')
-                    @include('Events.organiser.published.competitorsAccordion')
-                    @include('Events.organiser.published.financesAccordion')
-                    @include('Events.organiser.published.accordionTest')
-                </div>
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#overview" data-toggle="tab"><i class="fa fa-bar-chart"></i>Overview</a></li>
+                <li><a href="#competitions" data-toggle="tab"><i class="fa fa-trophy"></i>Competitions</a></li>
+                <li><a href="#competitors" data-toggle="tab"><i class="fa fa-user"></i>Competitors</a></li>
+                <li><a href="#finances" data-toggle="tab"><i class="fa fa-gbp"></i>Finances</a></li>
+                @if ($event->questions()->get()->count() > 0)
+                    <li><a href="#questions" data-toggle="tab"><i class="fa fa-question"></i>Your questions</a></li>
+                @endif
+                @if ($event->extras()->get()->count() > 0)
+                    <li><a href="#extras" data-toggle="tab"><i class="fa fa-ticket"></i>Your extras</a></li>
+                @endif
+            </ul>
+            <div class="tab-content">
+                @include('Events.organiser.published.overviewTab')
+                @include('Events.organiser.published.competitionsTab')
+                @include('Events.organiser.published.competitorsTab')
+                @include('Events.organiser.published.financesTab')
+                @if ($event->questions()->get()->count() > 0)
+                    @include('Events.organiser.published.questionsTab')
+                @endif
+                @if ($event->extras()->get()->count() > 0)
+                    @include('Events.organiser.published.extrasTab')
+                @endif
             </div>
         </div>
     @endif {{-- end of 'published' event admin version --}}

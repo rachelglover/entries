@@ -185,3 +185,7 @@ $(document).ready(function() {
     });
 });
 
+/* admin tabs active */
+$(document).ready(function(){
+    $('#competitionsTab a:first').tab('show');
+});

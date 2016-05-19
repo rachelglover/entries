@@ -30,7 +30,7 @@
     <link href="{{ URL::asset('css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/summernote.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('css/bootstrap.vertical-tabs.css') }}" re;="stylesheet">
+    <link href="{{ URL::asset('css/bootstrap.vertical-tabs.css') }}" rel="stylesheet">
 
     <!-- Responsivity for older IE -->
     <!--[if lt IE 9]>
