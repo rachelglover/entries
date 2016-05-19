@@ -176,6 +176,12 @@ class EntryController extends Controller
             }
         }
 
+        //if for some reason the competitor has forgotten to select a competition, bump them back.
+        if (empty($entries)) {
+            \Flash::error('You need to select a competition to enter before you can proceed.');
+            return redirect(action('EventsController@show', $event->slug));
+        }
+
         //Format the extras for display in the confirmation form
         $extras = array();
         if (key_exists('extras',$data)) {

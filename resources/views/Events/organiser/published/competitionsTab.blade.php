@@ -32,9 +32,8 @@
                                 <tbody>
                                     @foreach ($detail->entries()->get() as $entry)
                                         {{! $thisUser = $entry->user()->first() }}
-                                        {{! $username = "asdf"}}
                                         <tr>
-                                            <td><a href="#" data-toggle="modal" data-target="#viewEntryCompetitorInfoModal" data-username="{{$username}}">{{$thisUser->firstname}} {{$thisUser->lastname}}</a></td>
+                                            <td>{{$thisUser->firstname}} {{$thisUser->lastname}}</td>
                                             <td>{{$thisUser->id + 1000}}</td>
                                             <td>{{$thisUser->club}}</td>
                                             <td>{{$thisUser->homeCountry}}</td>
@@ -42,6 +41,8 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            @else {{--No entries yet --}}
+                                <div>No entries for this detail yet.</div>
                             @endif
                         </div>
                     @endforeach
