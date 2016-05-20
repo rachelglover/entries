@@ -17,11 +17,14 @@
                 @foreach ($event->competitions()->get() as $competition)
                     <div class="tab-pane" id="competition-{{$competition->id}}">
                         <h4>{{$competition->name}}</h4>
-
+                        competition information here.
+                        <br>export a list of all competitiors from all details here.
                     </div>
                     @foreach ($competition->details()->get() as $detail)
                         <div class="tab-pane" id="detail-{{$detail->id}}">
+                            <h4>{{$competition->name }} > {{$detail->name}}</h4>
                             @if ($detail->entries()->count() > 0)
+                                export a list of competitiors entered in this detail ?decide as could change over time
                             <table class="table table-striped table-condensed">
                                 <thead>
                                     <th>Competitor</th>

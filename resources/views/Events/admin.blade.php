@@ -21,7 +21,6 @@
         @include('Events.organiser.underconstruction.modals.addDetail')
         @include('Events.organiser.underconstruction.modals.publishEvent')
         @include('Events.organiser.underconstruction.modals.addExtra')
-        @include('Events.organiser.published.modals.competitorInfo')
 
 
 
@@ -74,6 +73,7 @@
                 @if ($event->extras()->get()->count() > 0)
                     <li><a href="#extras" data-toggle="tab"><i class="fa fa-ticket"></i>Your extras</a></li>
                 @endif
+                <li><a href="#communications" data-toggle="tab"><i class="fa fa-envelope"></i>Communication</a></li>
             </ul>
             <div class="tab-content">
                 @include('Events.organiser.published.overviewTab')
@@ -86,6 +86,7 @@
                 @if ($event->extras()->get()->count() > 0)
                     @include('Events.organiser.published.extrasTab')
                 @endif
+                @include('Events.organiser.published.commsTab')
             </div>
         </div>
     @endif {{-- end of 'published' event admin version --}}
