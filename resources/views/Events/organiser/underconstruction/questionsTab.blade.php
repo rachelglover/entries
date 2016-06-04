@@ -16,6 +16,7 @@
                         </div>
                         <div class="form-group">
                             <label for="question" class="control-label">Question:</label>
+                            <small>Type it as you would like it to be seen on the entry form</small>
                             <input type="text" class="form-control" name="question">
                         </div>
                         <div class="form-group">

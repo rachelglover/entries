@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Detail;
 use App\Event;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -28,7 +29,7 @@ class EventsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => 'index', 'except' => 'show']);
+        $this->middleware('auth', ['except' => array('index','show')]);
     }
 
     /**
@@ -304,45 +305,150 @@ class EventsController extends Controller
     /**
      * Export list of competitors and competitions
      */
-    public function exportCompetitors($event_id) {
-        $event = Event::findOrFail($event_id);
-        $entries = $event->entries()->get()->sortBy('user_lastname');
-        $competitor_ids = $entries->pluck('user_id')->unique();
-        $competitions = $event->competitions()->get();
-        //header
-        $header = array("Competitor Name");
-        foreach ($competitions as $competition) {
-            $header[] = $competition->name;
-        }
-        $sheetdata = array($header);
-        foreach ($competitor_ids as $competitor_id) {
-            $competitorEntries = $event->entries()->get()->where('user_id',$competitor_id);
-            $thisCompetitor = User::findOrFail($competitor_id);
-            $name = $thisCompetitor->lastname . ", " . $thisCompetitor->firstname;
-            $row = array($name);
+    public function export($type, $id) {
+        $header = array('Competitor name','ID','Email','Club','Home Country');
+        if ($type == 'competitors') {
+            $event = Event::findOrFail($id);
+            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $competitor_ids = $entries->pluck('user_id')->unique();
+            $competitions = $event->competitions()->get();
+            $header = array();
             foreach ($competitions as $competition) {
-                $entered_competition_ids = array();
-                foreach ($competitorEntries as $entry) {
-                    $entered_competition_ids[] = $entry->competition_id;
+                $header[] = $competition->name;
+            }
+            $sheetdata = array($header);
+            foreach ($competitor_ids as $competitor_id) {
+                $competitorEntries = $event->entries()->get()->where('user_id',$competitor_id);
+                $thisCompetitor = User::findOrFail($competitor_id);
+                $name = $thisCompetitor->lastname . ", " . $thisCompetitor->firstname;
+                $row = array($name);
+                foreach ($competitions as $competition) {
+                    $entered_competition_ids = array();
+                    foreach ($competitorEntries as $entry) {
+                        $entered_competition_ids[] = $entry->competition_id;
+                    }
+                    if (in_array($competition->id,$entered_competition_ids)) {
+                        $row[] = "Entered";
+                    } else {
+                        $row[] = "";
+                    }
                 }
-                if (in_array($competition->id,$entered_competition_ids)) {
-                    $row[] = "Entered";
-                } else {
-                    $row[] = "";
+                $sheetdata[] = $row;
+            }
+            Excel::create('competitors', function ($excel) use ($sheetdata) {
+                $excel->setTitle('Competitors List');
+                $excel->setCreator('Foresight Entries');
+                $excel->setCompany('Foresightentries.com');
+                $excel->setDescription('Competitors list');
+                // Create the sheet
+                $excel->sheet('Competitors', function($sheet) use ($sheetdata) {
+                    $sheet->fromArray($sheetdata);
+                });
+            })->export('xlsx');
+            return redirect()->back();
+        }
+        if ($type == 'event') {
+            $event = Event::findOrFail($id);
+            $competitions = $event->competitions()->get();
+            $sheets = array();
+            foreach ($competitions as $competition) {
+                $details = $competition->details()->get();
+                foreach ($details as $detail) {
+                    $entries = $detail->entries()->get()->sortBy('user_lastname');
+                    $sheetdata = array($header);
+                    $competitor_ids = $entries->pluck('user_id')->unique();
+                    foreach ($competitor_ids as $competitor_id) {
+                        $competitor = User::findOrFail($competitor_id);
+                        $row = array(
+                            $competitor->firstname . " " . $competitor->lastname,
+                            $competitor->id + 1000,
+                            $competitor->email,
+                            $competitor->club,
+                            $competitor->homeCountry,
+                        );
+                        $sheetdata[] = $row;
+                    }
+                    $sheets[$competition->name . "-" . $detail->name] = $sheetdata;
                 }
             }
-            $sheetdata[] = $row;
+            Excel::create($event->name, function ($excel) use ($sheets,$competitions) {
+                $excel->setTitle('Competitors');
+                $excel->setCreator('Foresight Entries');
+                $excel->setCompany('ForesightEntries.com');
+                $excel->setDescription('Competitors List');
+                foreach ($competitions as $competition) {
+                    $details = $competition->details()->get();
+                    foreach ($details as $detail) {
+                        $sheet = $sheets[$competition->name . '-' . $detail->name];
+                        $excel->sheet($competition->name . '-' . $detail->name, function ($thissheet) use ($sheet) {
+                            $thissheet->fromArray($sheet);
+                        });
+                    }
+                }
+            })->export('xlsx');
+            return redirect()->back();
         }
-
-        Excel::create('competitors', function ($excel) use ($sheetdata) {
-            $excel->setTitle('Competitors List');
-            $excel->setCreator('Foresight Entries');
-            $excel->setCompany('Foresightentries.com');
-            $excel->setDescription('Competitors list');
-            // Create the sheet
-            $excel->sheet('Competitors', function($sheet) use ($sheetdata) {
-                $sheet->fromArray($sheetdata);
-            });
-        })->export('xlsx');
+        if ($type == 'competition') {
+            $competition = Competition::findOrFail($id);
+            $details = $competition->details()->get();
+            $sheets = array();
+            foreach ($details as $detail) {
+                $entries = $detail->entries()->get()->sortBy('user_lastname');
+                $sheetdata = array($header);
+                $competitor_ids = $entries->pluck('user_id')->unique();
+                foreach ($competitor_ids as $competitor_id) {
+                    $competitor = User::findOrFail($competitor_id);
+                    $row = array(
+                        $competitor->firstname . " " . $competitor->lastname,
+                        $competitor->id + 1000,
+                        $competitor->email,
+                        $competitor->club,
+                        $competitor->homeCountry,
+                    );
+                    $sheetdata[] = $row;
+                }
+                $sheets[$detail->name] = $sheetdata;
+            }
+            Excel::create($competition->name, function ($excel) use ($sheets,$details) {
+                $excel->setTitle('Competitors');
+                $excel->setCreator('Foresight Entries');
+                $excel->setCompany('ForesightEntries.com');
+                $excel->setDescription('Competitors List');
+                foreach ($details as $detail) {
+                    $sheet = $sheets[$detail->name];
+                    $excel->sheet($detail->name, function ($thissheet) use ($sheet) {
+                        $thissheet->fromArray($sheet);
+                    });
+                }
+            })->export('xlsx');
+            return redirect()->back();
+        }
+        if ($type == 'detail') {
+            $detail = Detail::findOrFail($id);
+            $entries = $detail->entries()->get()->sortBy('user_lastname');
+            $sheetdata = array($header);
+            $competitor_ids = $entries->pluck('user_id')->unique();
+            foreach ($competitor_ids as $competitor_id) {
+                $competitor = User::findOrFail($competitor_id);
+                $row = array(
+                        $competitor->firstname . " " . $competitor->lastname,
+                        $competitor->id + 1000,
+                        $competitor->email,
+                        $competitor->club,
+                        $competitor->homeCountry,
+                    );
+                $sheetdata[] = $row;
+            }
+            Excel::create($detail->competition()->first()->name . "-" . $detail->name, function ($excel) use ($sheetdata) {
+                $excel->setTitle('Competitors');
+                $excel->setCreator("Foresight Entries");
+                $excel->setCompany("ForesightEntries.com");
+                $excel->setDescription("Competitors List");
+                $excel->sheet('Competitors', function($sheet) use ($sheetdata) {
+                    $sheet->fromArray($sheetdata);
+                });
+            })->export('xlsx');
+            return redirect()->back();
+        }
     }
 }

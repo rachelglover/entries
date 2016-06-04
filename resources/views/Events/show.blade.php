@@ -27,7 +27,6 @@
 
 <div id="content">
     <div class="container">
-        @include('flash::message')
         <div class="row">
             <section>
                 <div class="col-sm-8">

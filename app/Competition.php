@@ -31,5 +31,12 @@ class Competition extends Model
     public function details() {
         return $this->hasMany('App\Detail');
     }
-    
+
+
+    /**
+     * Get all the entries associated with this competition
+     */
+    public function entries() {
+        return $this->hasMany('App\Entry');
+    }
 }

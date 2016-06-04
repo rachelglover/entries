@@ -128,6 +128,13 @@ class Event extends Model
     }
 
     /**
+     * Event transactions
+     */
+    public function transactions() {
+        return $this->hasMany('App\Transaction');
+    }
+
+    /**
      * Event can have many entries
      */
     public function entries() {

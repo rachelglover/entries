@@ -12,6 +12,22 @@ use Omnipay\Omnipay;
 
 class PagesController extends Controller
 {
+    
+    /**
+     * Show the home page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //Maximum of four featured events can be accomodated on the website
+        //The featured events will be set by rachel in the overall admin.
+
+        $featuredevents = Event::published()->featured()->get();
+
+        return view('home')->with('featuredevents', $featuredevents);
+    }
+
     // Static page: about
     public function about() {
         return view('pages.about');
@@ -78,6 +94,25 @@ class PagesController extends Controller
         $user = Auth::user();
         \Flash::success('Congratulations, your event is now live and ready to accept entries');
         return redirect()->action('EventsController@admin', $event->slug)->with(['user' => $user, 'event' => $event]);
+    }
+
+    /**
+     * Contact form - sends email
+     */
+    public function processContactForm(Request $request) {
+        \Mail::send('pages.contact',
+            array(
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'user_message' => $request->get('message')
+            ), function($message)
+            {
+                $message->from('contact@foresightentries.com');
+                $message->to('contact@foresightentries.com', 'Admin')->subject('Contact from ForesightEntries.com');
+            });
+
+        \Flash::success('Thanks for contacting us! We\'ve received your message and We\'ll respond as soon as possible (normally within 24 hours or less).');
+        return redirect()->back();
     }
 
 }

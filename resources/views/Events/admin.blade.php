@@ -37,7 +37,7 @@
                 <p></p>
             </div>
         </div>
-            {{ $tabName = !empty(Session::get('tabName')) ? (string)Session::get('tabName') : 'competitions' }}
+            {{! $tabName = !empty(Session::get('tabName')) ? (string)Session::get('tabName') : 'competitions' }}
         <div class="tabs">
             <ul class="nav nav-pills nav-justified">
                 <li class="{{ $tabName == 'competitions' ? 'active' : '' }}"><a href="#competitions" data-toggle="tab">Competitions and details</a></li>

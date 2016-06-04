@@ -55,4 +55,5 @@ class DetailController extends Controller
         //Redirect back to the admin page
         return redirect(action('EventsController@admin', $event->slug));
     }
+    
 }

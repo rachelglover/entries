@@ -76,4 +76,5 @@ class CompetitionController extends Controller
         //return redirect(action('EventsController@admin', $request->input('event')));
         return Redirect::back()->with(['tabName'=>'competitions']);
     }
+    
 }

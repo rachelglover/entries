@@ -67,10 +67,9 @@ _________________________________________________________ -->
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="social">
-                                <a href="#" class="external facebook" data-animate-hover="pulse"><i class="fa fa-facebook"></i></a>
-                                <a href="#" class="external gplus" data-animate-hover="pulse"><i class="fa fa-google-plus"></i></a>
-                                <a href="#" class="external twitter" data-animate-hover="pulse"><i class="fa fa-twitter"></i></a>
-                                <a href="#" class="email" data-animate-hover="pulse"><i class="fa fa-envelope"></i></a>
+                                <a href="http://www.facebook.com/shootingentries" class="external facebook" data-animate-hover="pulse"><i class="fa fa-facebook"></i></a>
+                                <a href="http://www.twitter.com/foresightshooting" class="external twitter" data-animate-hover="pulse"><i class="fa fa-twitter"></i></a>
+                                <a href="{{action('PagesController@contact')}}" class="email" data-animate-hover="pulse"><i class="fa fa-envelope"></i></a>
                             </div>
                             @if (Auth::guest())
                             <div class="login">
@@ -95,7 +94,7 @@ _________________________________________________________ -->
                     <div class="container">
                         <div class="navbar-header">
 
-                            <a class="navbar-brand home" href="{{ action('HomeController@index') }}">
+                            <a class="navbar-brand home" href="{{ action('PagesController@index') }}">
                                 <img src="{{ URL::asset('img/logo.png') }}" alt="Universal logo" class="hidden-xs hidden-sm"><span class="sr-only">Homepage</span>
                             </a>
                             <div class="navbar-buttons">
@@ -111,16 +110,15 @@ _________________________________________________________ -->
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="dropdown">
-                                    <a href="{{ action('HomeController@index') }}">Home</b></a>
+                                    <a href="{{ action('PagesController@index') }}">Home</b></a>
                                 </li>
                                 <li class="dropdown">
                                     <a href="{{ action('EventsController@index') }}">All events</a>
                                 </li>
-                                @if (Auth::user())
                                 <li class="dropdown">
-                                    <a href="{{ url('/events/create') }}">Create event</a>
+                                    <a href="{{ action('EventsController@create') }}">Create event</a>
                                 </li>
-                                @endif
+
                                 <li class="dropdown">
                                     <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Info <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
@@ -129,7 +127,7 @@ _________________________________________________________ -->
                                         <li><a href="{{ action('PagesController@contact') }}">Contact</a></li>
                                     </ul>
                                 </li>
-                                @if (Auth::user())
+                                @if (Auth::check())
                                 <li class="dropdown">
                                     <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
@@ -192,145 +190,12 @@ _________________________________________________________ -->
  <!-- *** FOOTER ***
 _________________________________________________________ -->
 
-<footer id="footer">
+{{--<footer id="footer">
     <div class="container">
-        <div class="col-md-3 col-sm-6">
-            <h4>About us</h4>
 
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-
-            <hr>
-
-            <h4>Join our monthly newsletter</h4>
-
-            <form>
-                <div class="input-group">
-
-                    <input type="text" class="form-control">
-
-                    <span class="input-group-btn">
-
-                <button class="btn btn-default" type="button"><i class="fa fa-send"></i></button>
-
-            </span>
-
-                </div>
-                <!-- /input-group -->
-            </form>
-
-            <hr class="hidden-md hidden-lg hidden-sm">
-
-        </div>
-        <!-- /.col-md-3 -->
-
-        <div class="col-md-3 col-sm-6">
-
-            <h4>Blog</h4>
-
-            <div class="blog-entries">
-                <div class="item same-height-row clearfix">
-                    <div class="image same-height-always">
-                        <a href="#">
-                            <img class="img-responsive" src="{{ URL::asset('img/detailsquare.jpg') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="name same-height-always">
-                        <h5><a href="#">Blog post name</a></h5>
-                    </div>
-                </div>
-
-                <div class="item same-height-row clearfix">
-                    <div class="image same-height-always">
-                        <a href="#">
-                            <img class="img-responsive" src="{{ URL::asset('img/detailsquare.jpg') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="name same-height-always">
-                        <h5><a href="#">Blog post name</a></h5>
-                    </div>
-                </div>
-
-                <div class="item same-height-row clearfix">
-                    <div class="image same-height-always">
-                        <a href="#">
-                            <img class="img-responsive" src="{{ URL::asset('img/detailsquare.jpg') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="name same-height-always">
-                        <h5><a href="#">Very very long blog post name</a></h5>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="hidden-md hidden-lg">
-
-        </div>
-        <!-- /.col-md-3 -->
-
-        <div class="col-md-3 col-sm-6">
-
-            <h4>Contact</h4>
-
-            <p><strong>Foresight Shooting Ltd.</strong>
-                <br>13/25 New Avenue
-                <br>Newtown upon River
-                <br>45Y 73J
-                <br>England
-                <br>
-                <strong>Great Britain</strong>
-            </p>
-
-            <a href="contact.html" class="btn btn-small btn-template-main">Go to contact page</a>
-
-            <hr class="hidden-md hidden-lg hidden-sm">
-
-        </div>
-        <!-- /.col-md-3 -->
-
-
-
-        <div class="col-md-3 col-sm-6">
-
-            <h4>Photostream</h4>
-
-            <div class="photostream">
-                <div>
-                    <a href="#">
-                        <img src="{{ URL::asset('img/detailsquare.jpg') }}" class="img-responsive" alt="#">
-                    </a>
-                </div>
-                <div>
-                    <a href="#">
-                        <img src="{{ URL::asset('img/detailsquare2.jpg') }}" class="img-responsive" alt="#">
-                    </a>
-                </div>
-                <div>
-                    <a href="#">
-                        <img src="{{ URL::asset('img/detailsquare3.jpg') }}" class="img-responsive" alt="#">
-                    </a>
-                </div>
-                <div>
-                    <a href="#">
-                        <img src="{{ URL::asset('img/detailsquare3.jpg') }}" class="img-responsive" alt="#">
-                    </a>
-                </div>
-                <div>
-                    <a href="#">
-                        <img src="{{ URL::asset('img/detailsquare2.jpg') }}" class="img-responsive" alt="#">
-                    </a>
-                </div>
-                <div>
-                    <a href="#">
-                        <img src="{{ URL::asset('img/detailsquare.jpg') }}" class="img-responsive" alt="#">
-                    </a>
-                </div>
-            </div>
-
-        </div>
-        <!-- /.col-md-3 -->
     </div>
     <!-- /.container -->
-</footer>
+</footer>--}}
 <!-- /#footer -->
 
 <!-- *** FOOTER END *** -->

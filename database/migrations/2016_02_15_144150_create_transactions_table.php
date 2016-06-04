@@ -22,7 +22,7 @@ class CreateTransactionsTable extends Migration
             $table->string('status');
             $table->float('total');
             $table->string('currency');
-            $table->float('transaction_fee');
+            $table->float('transaction_fee'); //paypal fees
             $table->timestamps();
             $table->foreign('event_id')
                 ->references('id')

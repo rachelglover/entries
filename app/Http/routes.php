@@ -29,26 +29,35 @@
 |
 */
 
+
+
 Route::group(['middleware' => ['web']], function () {
     Route::auth();
-
-    Route::get('/home', 'HomeController@index');
-    Route::get('/', 'HomeController@index');
-
 //Static pages
+    Route::get('/', 'PagesController@index');
     Route::get('about','PagesController@about');
     Route::get('contact','PagesController@contact');
     Route::get('faq', 'PagesController@faq');
     Route::get('terms', 'PagesController@terms');
+    Route::post('contact/send', 'PagesController@processContactForm');
 
+    //Data export
+    Route::get('/export/{type}/{id}', 'EventsController@export');
 
     //Events
     Route::get('events/{events}/admin', 'EventsController@admin');
-    Route::resource('events','EventsController');
+    //Route::resource('events','EventsController');
+    Route::get('events', 'EventsController@index');
+    Route::get('events/create', 'EventsController@create');
+    Route::post('events', 'EventsController@store');
+    Route::get('events/{events}', 'EventsController@show');
+    Route::get('events/{events}/edit', 'EventsController@edit');
+    Route::patch('events/{events}', 'EventsController@update');
+    Route::delete('events/{events}', 'EventsController@destroy');
+    
     //This is in pagescontroller because of the specific eventrequest that has
     //required fields - putting the publish method in pagescontroller gets around this
     Route::post('events/{events}/publish', 'PagesController@publish');
-    Route::get('/events/{events}/export/competitors', 'EventsController@exportCompetitors');
 
     //This is an event entry form (hence the url) but it's really an Entry method
     Route::get('events/{events}/enter', 'EntryController@create');

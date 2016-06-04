@@ -189,3 +189,8 @@ $(document).ready(function() {
 $(document).ready(function(){
     $('#competitionsTab a:first').tab('show');
 });
+
+/* activate tooltips */
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});

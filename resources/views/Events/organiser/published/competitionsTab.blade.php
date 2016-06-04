@@ -17,14 +17,17 @@
                 @foreach ($event->competitions()->get() as $competition)
                     <div class="tab-pane" id="competition-{{$competition->id}}">
                         <h4>{{$competition->name}}</h4>
-                        competition information here.
-                        <br>export a list of all competitiors from all details here.
+                        <p>{{$competition->description}}</p>
+                        Click on the detail names to the left to see the current entries.<br>
+                        <a href="{{ action('EventsController@export', ['type' => 'competition', 'id' => $competition->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download fa-2x"></i><br>Download the entries for all details in this competition (Excel)</a>
+
                     </div>
                     @foreach ($competition->details()->get() as $detail)
                         <div class="tab-pane" id="detail-{{$detail->id}}">
                             <h4>{{$competition->name }} > {{$detail->name}}</h4>
                             @if ($detail->entries()->count() > 0)
-                                export a list of competitiors entered in this detail ?decide as could change over time
+                                {{$detail->description}}
+                                <a href="{{ action('EventsController@export', ['type' => 'detail', 'id' => $detail->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download fa-2x"></i><br>Download the entries for this detail (Excel)</a>
                             <table class="table table-striped table-condensed">
                                 <thead>
                                     <th>Competitor</th>
@@ -33,10 +36,10 @@
                                     <th>Home Country</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($detail->entries()->get() as $entry)
+                                    @foreach ($detail->entries()->get()->sortBy('user_lastname') as $entry)
                                         {{! $thisUser = $entry->user()->first() }}
                                         <tr>
-                                            <td>{{$thisUser->firstname}} {{$thisUser->lastname}}</td>
+                                            <td><span class="text-uppercase">{{$thisUser->lastname}}</span>, {{$thisUser->firstname}}</td>
                                             <td>{{$thisUser->id + 1000}}</td>
                                             <td>{{$thisUser->club}}</td>
                                             <td>{{$thisUser->homeCountry}}</td>
