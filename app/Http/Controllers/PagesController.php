@@ -76,6 +76,15 @@ class PagesController extends Controller
         $events = collect($eventsarray);
         return view('user.entries')->with(['user' => $user, 'events' => $events]);
     }
+
+    /**
+     * Page for the user profile.
+     * @return mixed
+     */
+    public function userProfile() {
+        $user = Auth::user();
+        return view('user.profile')->with(['user' => $user]);
+    }
     
 
     /**

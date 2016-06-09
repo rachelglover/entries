@@ -141,7 +141,22 @@ class EventsController extends Controller
     }
 
     /**
-     * Main event administration page
+     * Site administration page for me
+     * @return $this
+     */
+    public function siteAdmin() {
+        $user = Auth::user();
+        if ($user->id == 1) {
+            return view('events.edit')->with(['user' => $user]);
+        } else {
+            \Flash::warning('Sorry, you don\'t have access to that page');
+            return redirect()->back();
+        }
+
+    }
+
+    /**
+     * Main event administration page for organisers
      *
      * @param $id
      * @return $this

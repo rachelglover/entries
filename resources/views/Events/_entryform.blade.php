@@ -20,7 +20,7 @@
                         <th width="25%">Description</th>
                         <th width="15%">Entry fee</th>
                         <th width="15%">Availability</th>
-                        <th width="35%">Enter</th>
+                        <th width="35%">Details/Enter</th>
                         </thead>
 
                         <tbody>
@@ -96,6 +96,7 @@
                                 @endif
                                 @if ($question->answerType == "boolean")
                                     <select name="questions[{{$question->id}}]" class="form-control">
+                                        <option value="">Select...</option>
                                         <option value="no">No</option>
                                         <option value="yes">Yes</option>
                                     </select>
@@ -105,6 +106,7 @@
                                 @endif
                                 @if ($question->answerType == "list")
                                     <select name="questions[{{$question->id}}]" class="form-control">
+                                        <option value="">Select...</option>
                                         @foreach (explode(',', $question->listItems) as $listItem)
                                             <option value="{{$listItem}}">{{$listItem}}</option>
                                         @endforeach

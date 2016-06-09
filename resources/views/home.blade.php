@@ -15,8 +15,8 @@ _________________________________________________________ -->
                 <div class="item">
                     <div class="row">
                         <div class="col-sm-5 right">
-                            <h1>Easy shooting event administration</h1>
-                            <p>Online payments. 
+                            <h1>blah blah blah</h1>
+                            <p>Online payments.
                                 <br />Portfolio. Blog. E-commerce.</p>
                         </div>
                         <div class="col-sm-7">
@@ -41,36 +41,6 @@ _________________________________________________________ -->
                             </ul>
                         </div>
 
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="row">
-                        <div class="col-sm-5 right">
-                            <h1>Design</h1>
-                            <ul class="list-style-none">
-                                <li>Clean and elegant design</li>
-                                <li>Full width and boxed mode</li>
-                                <li>Easily readable Roboto font and awesome icons</li>
-                                <li>7 preprepared colour variations</li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-7">
-                            <img class="img-responsive" src="{{ URL::asset('img/template-easy-customize.png') }}" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="row">
-                        <div class="col-sm-7">
-                            <img class="img-responsive" src="{{ URL::asset('img/template-easy-code.png') }}" alt="">
-                        </div>
-                        <div class="col-sm-5">
-                            <h1>Easy to customize</h1>
-                            <ul class="list-style-none">
-                                <li>7 preprepared colour variations.</li>
-                                <li>Easily to change fonts</li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>

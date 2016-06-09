@@ -29,7 +29,7 @@
                                     <form method="post" action="{{ action('EntryController@cancelEntireEntry', $event->id) }}">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <div class="bold">Are you sure you want to cancel your entire entry to this event?</div>
-                                        <div>Once you have cancelled we will refund your entry fees (minus registration fees) and confirm by email. If you change your mind and wish to re-enter, you will have to submit a new entry from the event page.</div>
+                                        <div>Once you have cancelled we will refund your entry fees (minus registration fees) and any additional extras you may have ordered and confirm by email. If you change your mind and wish to re-enter, you will have to submit a new entry from the event page.</div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                             <button type="submit" name="submit" class="btn btn-success"><i class="fa fa-save"></i> Cancel your entry to this event</button>

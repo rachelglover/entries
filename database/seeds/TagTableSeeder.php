@@ -75,16 +75,7 @@ class TagTableSeeder extends Seeder
             'name' => 'Outdoor',
         ]);
         DB::table('tags')->insert([
-            'name' => 'Postal',
-        ]);
-        DB::table('tags')->insert([
             'name' => 'Electronic targets',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'GB selection match',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Equipment Control',
         ]);
 
     }

@@ -44,6 +44,10 @@
                     <div class="project-more">
                         <h4>Organiser</h4>
                         <p>{{ $event->getOrganiserName() }}</p>
+                        @if ($event->website != "http://www")
+                            <h4>Website</h4>
+                            <p><a href="{{$event->website}}" target="_blank">{{$event->website}}</a></p>
+                        @endif
                         <h4>Range Location</h4>
                         <p><a href="{{$event->getGoogleMapLink()}}" target="_blank">click here</a></p>
                         <h4>Tags</h4>

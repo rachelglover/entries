@@ -45,6 +45,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/export/{type}/{id}', 'EventsController@export');
 
     //Events
+    Route::get('site/admin', 'EventsController@siteAdmin');
     Route::get('events/{events}/admin', 'EventsController@admin');
     //Route::resource('events','EventsController');
     Route::get('events', 'EventsController@index');
@@ -74,6 +75,7 @@ Route::group(['middleware' => ['web']], function () {
     //User pages
     Route::get('/user/events', 'PagesController@userEvents');
     Route::get('/user/entries', 'PagesController@userEntries');
+    Route::get('/user/profile', 'PagesController@userProfile');
 
     //Questions
     Route::post('/question/add', 'QuestionController@store');
