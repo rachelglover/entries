@@ -40,7 +40,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('faq', 'PagesController@faq');
     Route::get('terms', 'PagesController@terms');
     Route::post('contact/send', 'PagesController@processContactForm');
-
+    
     //Data export
     Route::get('/export/{type}/{id}', 'EventsController@export');
 
@@ -59,6 +59,8 @@ Route::group(['middleware' => ['web']], function () {
     //This is in pagescontroller because of the specific eventrequest that has
     //required fields - putting the publish method in pagescontroller gets around this
     Route::post('events/{events}/publish', 'PagesController@publish');
+    Route::post('site/admin/toggleFeatured/{slug}', 'PagesController@siteAdminToggleFeatured');
+
 
     //This is an event entry form (hence the url) but it's really an Entry method
     Route::get('events/{events}/enter', 'EntryController@create');
@@ -96,6 +98,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/entry/changeDetail/{entry}','EntryController@changeDetail');
     Route::post('/entry/cancelCompetition/{entry}', 'EntryController@cancelCompetition');
     Route::post('/entry/cancelEntireEntry/{event}', 'EntryController@cancelEntireEntry');
+    Route::post('/entry/refundedEntry/{entry}', 'EntryController@entryRefunded');
 
     //Route::get('/gatewatest', 'PagesController@home');
     //Route::post('/test', 'PagesController@postPaypalSubmit');

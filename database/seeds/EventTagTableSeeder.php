@@ -16,7 +16,7 @@ class EventTagTableSeeder extends Seeder
             for ($j = 1; $j<rand(1,5); $j++) {
                 DB::table('event_tag')->insert([
                     'event_id' => $i,
-                    'tag_id' => rand(1,25),
+                    'tag_id' => rand(1,22),
                 ]);
             }
         }

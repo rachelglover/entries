@@ -83,7 +83,7 @@ _________________________________________________________ -->
                             </div>
                             <div class="content">
                                 <h4><a href="{{ action('EventsController@show',$event->slug) }}">{{ $event->name }}</a></h4>
-                                <p class="intro">Fifth abundantly made Give sixth hath. Cattle creature i be don't them behold green moved fowl Moved life us beast good yielding. Have bring.</p>
+
                                 <p class="read-more"><a href="{{ action('EventsController@show',$event->slug) }}" class="btn btn-template-main">Enter</a>
                                 </p>
                             </div>

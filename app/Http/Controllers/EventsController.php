@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Detail;
+use App\Entry;
 use App\Event;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -146,14 +148,43 @@ class EventsController extends Controller
      */
     public function siteAdmin() {
         $user = Auth::user();
+        $events = Event::all();
+        //Do the current calculations
+        $futureTransfers = $this->calculateFutureTransfers();
+        $pastTransfers = $this->getPastTransfers();
+        $refundsPending = $this->getRefundsPending();
         if ($user->id == 1) {
-            return view('events.edit')->with(['user' => $user]);
+            return view('admin.siteadmin')->with(['user' => $user, 'events' => $events, 'futureTransfers' => $futureTransfers, 'pastTransfers' => $pastTransfers, 'refundsPending' => $refundsPending]);
         } else {
             \Flash::warning('Sorry, you don\'t have access to that page');
             return redirect()->back();
         }
-
     }
+
+    /**
+     * Calculate the transfers that are scheduled to be made in the future, based upon
+     * current entries
+     */
+    private function calculateFutureTransfers() {
+        return NULL;
+    }
+
+    /**
+     * Get the transfers to organisers that have been made in the past.
+     */
+    private function getPastTransfers() {
+        return NULL;
+    }
+
+    /**
+     * Get any refunds/cancellations that are currently pending. These are entries
+     * where 'paymentStatus' == 'pending_cancellation_single|pending_cancellation_event'.
+     */
+    private function getRefundsPending() {
+        $cancellations = Entry::where('paymentStatus','=','pending_cancellation_single')->orWhere('paymentStatus','=','pending_cancellation_event')->get();
+        return $cancellations;
+    }
+    
 
     /**
      * Main event administration page for organisers

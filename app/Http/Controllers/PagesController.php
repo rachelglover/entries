@@ -104,6 +104,27 @@ class PagesController extends Controller
         \Flash::success('Congratulations, your event is now live and ready to accept entries');
         return redirect()->action('EventsController@admin', $event->slug)->with(['user' => $user, 'event' => $event]);
     }
+    /**
+     * Site administration page for me - toggle Featured event
+     */
+    public function siteAdminToggleFeatured(Request $request,$slug) {
+        $event = Event::where('slug','=',$slug)->firstOrFail();
+        #dd($event);
+        if ($event->featured == 1) {
+            $event->featured = 0;
+            $event->save();
+            \Flash::success($event->name . " no longer featured");
+        } else{
+            if ($event->status == "published") {
+                $event->featured = 1;
+                $event->save();
+                \Flash::success($event->name . " is now featured!");
+            } else {
+                \Flash::error($event->name . " can't be featured as it hasn't been published by the organiser yet.");
+            }
+        }
+        return redirect()->action('EventsController@siteAdmin');
+    }
 
     /**
      * Contact form - sends email

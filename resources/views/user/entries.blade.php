@@ -16,6 +16,9 @@
         @include('flash::message')
             <div class="col-lg-12">
                 <p>All your current entries are listed below. If a competition has multiple details, you can change your detail at any time before the closing date, providing there is space in the detail.</p>
+                    @if ($events->count() == 0)
+                        <p class="bold">You haven't entered any events yet.</p>
+                    @endif
                     @foreach ($events as $event)
                     {{-- Modal for cancelling the entire entry --}}
                     <div class="modal fade" id="cancelEntireEntryModal-{{$event->id}}" tabindex="-1" role="dialog" aria-labelledby="cancelEntireEntryModalLabel">
@@ -120,7 +123,9 @@
                                     <td>
                                         {{-- Can cancel just this competition but not the event. Should check that it's a multi competition
                                         event, otherwise it's a full cancellation. --}}
-                                        @if ($entry->paymentStatus == 'pending_cancellation')
+                                        @if ($entry->paymentStatus == 'pending_cancellation_single')
+                                            <div class="bold">Cancelled, pending refund</div>
+                                        @elseif ($entry->paymentStatus == 'pending_cancellation_event')
                                             <div class="bold">Cancelled, pending refund</div>
                                         @elseif ($entry->paymentStatus == 'cancelled')
                                             <div class="alert-danger">CANCELLED AND REFUNDED</div>

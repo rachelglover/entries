@@ -21,6 +21,7 @@ class Event extends Model
         'lateEntries',
         'lateEntriesFee',
         'registration',
+        'featured',
         'registrationFee',
         'user_id', //temporary
     ];

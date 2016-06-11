@@ -131,6 +131,10 @@ _________________________________________________________ -->
                                 <li class="dropdown">
                                     <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
+                                        {{! $user = Auth::user()}}
+                                        @if ($user->id == 1)
+                                            <li><a href="{{ action('EventsController@siteAdmin') }}">Site admin</a></li>
+                                        @endif
                                         <li><a href="{{ action('PagesController@userProfile') }}">Edit profile</a>
                                         </li>
                                         <li><a href="{{ action('PagesController@userEntries') }}">My entries</a>

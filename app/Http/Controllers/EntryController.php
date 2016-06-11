@@ -368,7 +368,7 @@ class EntryController extends Controller
      */
     public function cancelCompetition(Request $request, $entry_id) {
         $entry = Entry::findOrFail($entry_id);
-        $entry['paymentStatus'] = 'pending_cancellation';
+        $entry['paymentStatus'] = 'pending_cancellation_single';
         $entry->save();
         $competition = $entry->competition()->first();
         \Flash::success("Your entry to " . $competition->name . " was cancelled and you will be refunded within 48 hours.");
@@ -382,11 +382,21 @@ class EntryController extends Controller
         $user = Auth::user();
         $entries = $user->entries()->where('event_id','=',$event_id)->get();
         foreach ($entries as $entry) {
-            $entry['paymentStatus'] = 'pending_cancellation';
+            $entry['paymentStatus'] = 'pending_cancellation_event';
             $entry->save();
         }
         $event = Event::find($event_id);
         \Flash::success("Your entries to '" . $event->name . "' have been cancelled and you will be refunded within 48 hours.");
         return redirect(action('PagesController@userEntries'));
+    }
+
+    /**
+     * Mark a cancelled entry as cancelled (i.e. refunded) in the database
+     */
+    public function entryRefunded(Request $request, $entry_id) {
+        $entry = Entry::findOrFail($entry_id);
+        $entry->paymentStatus = 'cancelled';
+        $entry->save();
+        return redirect(action('EventsController@siteAdmin'));
     }
 }

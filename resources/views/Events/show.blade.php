@@ -106,7 +106,7 @@
                             {{-- The closing date for entries has passed. check whether late entries are OK--}}
                             @if ($event->lateEntries == 1)
                                 {{--Late entries are OK, show the entry form. --}}
-                                <h4>The closing date for entries has passed but the organiser is accepting late entries with an extra fee of £{{$entry->lateEntriesFee}}.</h4>
+                                <h4>The closing date for entries has passed but the organiser is accepting late entries with an extra fee of £{{$event->lateEntriesFee}}.</h4>
                                 @include('events._entryform')
                             @else
                                 <h3>Entries for this event and the organiser has chosen not to accept late entries.</h3>

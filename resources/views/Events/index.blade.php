@@ -38,7 +38,6 @@
                         </div>
                         <div class="content">
                             <h4><a href="{{ action('EventsController@show', [$event->slug]) }}">{{ $event->name }}</a></h4>
-                            <p>Am terminated it excellence invitation projection as. She graceful shy believed distance use nay. Lively is people so basket ladies window expect.</p>
                         </div>
                     </div>
                 </div>
