@@ -164,6 +164,14 @@ class Event extends Model
     }
 
     /**
+     * Get the email address of the organiser
+     */
+    public function getOrganiserEmail($event_id) {
+        $organiser = User::findOrFail($this->user_id);
+        return $organiser->email;
+    }
+
+    /**
      * Format the post-code for google maps search
      */
     public function getGoogleMapLink() {

@@ -99,7 +99,7 @@ class EventsController extends Controller
 
         $tags = Tag::lists('name', 'id');
         $currencies = array('select' => 'Select...', 'GBP' => 'GBP');
-        return view('events.create')->with(['tags' => $tags, 'currencies' => $currencies]);
+        return view('events.create')->with(['tags' => $tags, 'currencies' => $currencies, 'event' => null]);
     }
 
     /**
@@ -186,7 +186,14 @@ class EventsController extends Controller
         $cancellations = Entry::where('paymentStatus','=','pending_cancellation_single')->orWhere('paymentStatus','=','pending_cancellation_event')->get();
         return $cancellations;
     }
-    
+
+    /**
+     * Event organiser can send an email message to all competitors
+     */
+    public function sendMassEmail($slug) {
+        $event = Event::where('slug', '=', $slug)->firstOrFail();
+        \Flash::warning('You wanted to send an email' . $slug);
+    }
 
     /**
      * Main event administration page for organisers

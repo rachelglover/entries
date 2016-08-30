@@ -1,5 +1,30 @@
 <div class="tab-pane" id="communications">
-    This is the communications tab. The organiser can download a list of email addresses (in a nice cut and paste format) so they
-    can email their competitors. Mass mailings from our site mean replies would be a bit tricky (unless we mask it like
-    it's coming from the event organiser?). Prob easier to start with a downloadable list in a text file.
+    <p>You can send an email to all of your competitors below and your competitors will be able to reply to your email address directly. This allows your entrants to reply to you directly. Alternatively, all the email addresses for your competitors are in the main Excel download on the Overview tab. </p>
+    <form method="post" action="{{ action('EventsController@sendMassEmail', $event->slug) }}">
+        <div class="modal-body">
+            <div class="form-group">
+                <input type="hidden" class="form-control" name="_token" value="{{ csrf_token() }}">
+            </div>
+            <div class="form-group">
+                <input type="hidden" class="form-control" name="event" value="{{ $event->id }}">
+            </div>
+            <div class="comp form-group">
+                <input type="hidden" class="form-control" name="competition">
+            </div>
+            <div class="form-group">
+                <label for="from" class="control-label">Email from:</label>
+                <input type="text" class="form-control" name="from" value="{{ $event->getOrganiserEmail($event->id) }}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="to" class="control-label">To: ALL COMPETITORS</label>
+            </div>
+            <div class="form-group">
+                <label for="message" class="control-label">Message:</label>
+                <input type="text" class="form-control" name="message">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" name="submit" class="btn"><i class="fa fa-save"></i> Send email</button>
+        </div>
+    </form>
 </div>

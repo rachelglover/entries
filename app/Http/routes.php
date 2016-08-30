@@ -55,6 +55,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('events/{events}/edit', 'EventsController@edit');
     Route::patch('events/{events}', 'EventsController@update');
     Route::delete('events/{events}', 'EventsController@destroy');
+    Route::post('events/{events}/email', 'EventsController@sendMassEmail');
     
     //This is in pagescontroller because of the specific eventrequest that has
     //required fields - putting the publish method in pagescontroller gets around this

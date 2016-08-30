@@ -37,9 +37,12 @@
 
     <div class="form-group">
         {!! Form::label('image','Event image') !!}
-        <p class="small">This is your current image:</p>
-        {{! $image =  url('/') . '/img/events/' . $event->imageFilename }}
-        <img src="{{ $image }}" style="width: 150px" />
+        @if ($event != null) {
+            <p class="small">This is your current image:</p>
+            {{! $image =  url('/') . '/img/events/' . $event->imageFilename }}
+            <img src="{{ $image }}" style="width: 150px" />
+        }
+        @endif
         {!! Form::file('image', null) !!}
 
 

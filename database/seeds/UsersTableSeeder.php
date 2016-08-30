@@ -25,6 +25,7 @@ class UsersTableSeeder extends Seeder
         /**
          * Create 50 random users
          */
+
         $firstnames = array('Alison', 'Brian', 'Chris', 'Dave', 'Elaine', 'Fred', 'Graham', 'Heather', 'Irene', 'Jackie', 'Kevin', 'Lorraine', 'Michael', 'Nigel', 'Ophelia', 'Pete', 'Quinn', 'Rebecca', 'Steve', 'Trevor', 'Ursula', 'Vernon', 'Rachel', 'Lina', 'Philip', 'Craig', 'Agnes', 'James');
         $lastnames = array('Smith', 'Jones', 'Killey', 'Qualtrough', 'Mylchreest', 'Taylor', 'Cooil', 'Cowley', 'Quilliam', 'Glover', 'Beck', 'Watson', 'Grey', 'Lannister', 'Stark', 'Bolton', 'Targaeryan');
         $clubs = array('IOMSC', 'Easingwold', 'Andover', 'Watten', 'Rugeley');

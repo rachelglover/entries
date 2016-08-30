@@ -1,10 +1,10 @@
 <?php use App\User; ?>
 <div class="tab-pane" id="finances">
-    <p>We will transfer the entry fees to your PayPal account ({{$event->paypal}}) 24 hours after the date you chose to close the entries ({{$event->closingDate->toFormattedDateString()}})</p>
+    <p>We will transfer the entry fees to your PayPal account (<strong>{{$event->paypal}}</strong>) 24 hours after the date you chose to close the entries ({{$event->closingDate->toFormattedDateString()}}).</p>
     @if ($event->lateEntries == 1)
-        <p>As you are accepting late entries, we will transfer the fees for any late entries 24 hours after the start of your event ({{$event->startDate->toFormattedDateString()}})</p>
+        <p>As you are accepting late entries, we will transfer the fees for any late entries 24 hours after the start of your event ({{$event->startDate->toFormattedDateString()}}).</p>
     @endif
-    <p>Should you need your entry fees earlier than this date please <a href="{{action('PagesController@contact')}}">contact us</a> to arrange an alternative payment date</p>
+    <p>Should you need your entry fees earlier than this date please <a href="{{action('PagesController@contact')}}">contact us</a> to arrange an alternative payment schedule.</p>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
             <th width="10%">Transaction ID</th>
