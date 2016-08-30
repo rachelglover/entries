@@ -37,13 +37,17 @@
 
     <div class="form-group">
         {!! Form::label('image','Event image') !!}
-        <p class="small">We recommend a 2:1 ratio with a minimum size of 1200 x 600. If you don't have an image we'll assign a stock image.</p>
+        <p class="small">This is your current image:</p>
+        {{! $image =  url('/') . '/img/events/' . $event->imageFilename }}
+        <img src="{{ $image }}" style="width: 150px" />
         {!! Form::file('image', null) !!}
+
+
     </div>
 
     <div class="form-group">
         {!! Form::label('website', 'Website (if available):') !!}
-        {!! Form::text('website', 'http://www.', ['class' => 'form-control']) !!}
+        {!! Form::text('website', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">
@@ -58,6 +62,11 @@
         {!! Form::text('paypal', null, ['class' => 'form-control']) !!}
     </div>
 
+    <div class="form-group">
+        {!! Form::label('currency', 'Event currency:') !!}
+        {!! Form::select('currency', $currencies, null, ['class' => 'form-control']) !!}
+    </div>
+
     <?php if (empty($lateEntriesCurrent)) { $lateEntriesCurrent = false; } ?>
     <div class="form-group">
         {!! Form::label('lateEntries', 'Will you accept entries after the closing date?') !!}
@@ -66,7 +75,7 @@
 
     <div class="form-group" id="lateEntriesCost">
         {!! Form::label('lateEntriesFee', 'Late entries fee (£):') !!}
-       {!! Form::text('lateEntriesFee', null, ['class' => 'form-control']) !!}
+       {!! Form::text('lateEntriesFee', "0.00", ['class' => 'form-control']) !!}
     </div>
 
     <?php if (empty($registrationCurrent)) { $registrationCurrent = false; } ?>
@@ -77,7 +86,7 @@
 
     <div class="form-group" id="registrationCost">
         {!! Form::label('registrationFee', "Registration fee (£):") !!}
-        {!! Form::text('registrationFee', null, ['class' => 'form-control']) !!}
+        {!! Form::text('registrationFee', "0.00", ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">

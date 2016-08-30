@@ -48,7 +48,7 @@
                                 </tbody>
                             </table>
                             @else {{--No entries yet --}}
-                                <div>No entries for this detail yet.</div>
+                                <div>There are no entries for this detail yet.</div>
                             @endif
                         </div>
                     @endforeach

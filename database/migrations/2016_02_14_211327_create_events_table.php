@@ -30,6 +30,7 @@ class CreateEventsTable extends Migration
             $table->integer('registration');
             $table->float('lateEntriesFee');
             $table->float('registrationFee');
+            $table->string('currency')->default('GBP');
             $table->integer('featured')->default(0);
             $table->timestamps();
             //Relationship between organiser and user ID

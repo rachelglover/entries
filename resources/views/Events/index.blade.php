@@ -25,7 +25,7 @@
                     <div class="box-image-text">
                         <div class="top">
                             <div class="image">
-                                {{! $image = "img/portfolio-" . rand(1,4) . ".jpg"}}
+                                {{! $image = 'img/events/' . $event->imageFilename }}
                                 <img src="{{ URL::asset($image) }}" alt="" class="img-responsive">
                                 
                             </div>

@@ -29,7 +29,7 @@
     <div class="container">
         <div class="row">
             <section>
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <div class="project owl-carousel">
                         <div class="item">
                             {{! $image = 'img/events/' . $event->imageFilename }}
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="project-more">
                         <h4>Organiser</h4>
                         <p>{{ $event->getOrganiserName() }}</p>
@@ -57,9 +57,9 @@
                             @endforeach
                         </p>
                         <h4>Dates</h4>
-                        <p>{{ $event->startDate->toFormattedDateString() }} to {{ $event->endDate->toFormattedDateString() }}</p>
+                        <p>{{ $event->startDate->format('l jS \\of F Y') }} to {{ $event->endDate->format('l jS \\of F Y') }}</p>
                         <h4>Closing date for entries</h4>
-                        <p>{{ $event->closingDate->toFormattedDateString() }}</p>
+                        <p>{{ $event->closingDate->format('l jS \\of F Y') }}</p>
                     </div>
                 </div>
             </section>
@@ -72,14 +72,14 @@
 
                     <h4>Late Entries</h4>
                     @if ($event->lateEntries == 1)
-                        <p>The organiser will accept late entries for this event
+                        <p>The organiser is accepting late entries for this event.
                         @if ($event->lateEntriesFee > 0)
-                            and an additional charge of £{{ $event->lateEntriesFee }} will be payable after {{ $event->closingDate->toFormattedDateString()}}.
+                            There is an additional charge of £{{ $event->lateEntriesFee }} payable for entries after {{ $event->closingDate->toFormattedDateString()}}.
                         @else
-                            There is no charge for late entries for this event.
+                            There is no charge for late entries.
                         @endif
                     @else
-                        <p>Late entries are not accepted for this event. Please enter before {{ $event->closingDate->toFormattedDateString() }}
+                        <p>The organiser is not accepting late entries for this event. Please enter before {{ $event->closingDate->toFormattedDateString() }}
                     @endif
                         </p>
 

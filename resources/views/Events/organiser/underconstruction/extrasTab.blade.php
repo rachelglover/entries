@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-lg-12">
             <h3>Optional extras</h3>
-            <p>Adding optional dinner tickets, accommodation, merchandise or anything else you can think of to your event is really simple and they'll appear on the entry form. </p>
+            <p>Adding optional dinner tickets, team competitions or anything else you can think of to your event is really simple and they'll appear on the entry form. </p>
+            <p>We recommend that any additional competitions (ladies, pairs, aggregates) are added here.</p>
             <button type="button" class="btn" data-toggle="modal" data-target="#extrasModal" id="extrasModalButton">Add an extra to your entry form</button>
             <p></p>
             @if ($event->extras()->get()->count() > 0)

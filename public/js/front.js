@@ -96,7 +96,7 @@ function sliders() {
 	});
 
 	$('.project').owlCarousel({
-	    navigation: true, // Show next and prev buttons
+	    navigation: false, // Show next and prev buttons
 	    navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
 	    slideSpeed: 300,
 	    paginationSpeed: 400,
@@ -104,7 +104,7 @@ function sliders() {
 	    stopOnHover: true,
 	    singleItem: true,
 	    afterInit: '',
-	    lazyLoad: true
+	    lazyLoad: true,
 	});
 
 	$('.homepage').owlCarousel({

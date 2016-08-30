@@ -64,6 +64,7 @@ class EventsTableSeeder extends Seeder
                 'registration' => $reg,
                 'registrationFee' => $regFee,
                 'featured' => $featured,
+                'currency' => 'GBP',
                 'imageFilename' => $i . ".jpg"
             ]);
 

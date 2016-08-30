@@ -28,9 +28,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="lead"><b>Hi {{ $user->firstname }}!</b></div>
-                <p>Now that we have the basic information about your event you can add competitions and details to it. You can also add optional extras, discounts and questions that you would like answered on the entry form.</p>
-                <button type="button" class="btn btn-sm"><a href="{{ action('EventsController@edit',$event->slug) }}">Edit basic info</a></button>
-                <button type="button" class="btn btn-sm"><a href="{{ action('EventsController@show',$event->slug) }}" target="_blank">Preview entry form</a></button>
+                <p>Now that we have the basic information about your event you can add competitions and details to it. You can also add optional extras, discounts and questions that you would like answered on the entry form. Once you've added all your competitions and you're happy with how the entry form will look, press the green button to publish your event on the website and allow people to enter.</p>
+                <p>You can come back to this page at any time by going to "My Account" and then "My Events".</p>
+                <button type="button" class="btn btn-sm btn-default"><a href="{{ action('EventsController@edit',$event->slug) }}">Edit basic event info</a></button>
+                <button type="button" class="btn btn-sm btn-default"><a href="{{ action('EventsController@show',$event->slug) }}" target="_blank">Preview entry form</a></button>
                 <div class="pull-right">
                     <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#publishModal">Make your event LIVE!</button>
                 </div>

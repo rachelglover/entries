@@ -1,5 +1,6 @@
 <?php use App\User; ?>
 <div class="tab-pane" id="questions">
+    <a href="{{ action('EventsController@export', ['type' => 'competitor_answers', 'id' => $event->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download"></i><br>Download answers to Excel</a>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
         <th>Competitor</th>

@@ -23,6 +23,7 @@ class Event extends Model
         'registration',
         'featured',
         'registrationFee',
+        'currency',
         'user_id', //temporary
     ];
 

@@ -12,36 +12,20 @@ _________________________________________________________ -->
 
         <div class="container">
             <div class="homepage owl-carousel">
+                {{-- duplicate this bit --}}
                 <div class="item">
                     <div class="row">
-                        <div class="col-sm-5 right">
-                            <h1>blah blah blah</h1>
-                            <p>Online payments.
-                                <br />Portfolio. Blog. E-commerce.</p>
+                        <div class="col-sm-6 right">
+                            <h1>Online shooting competition entries</h1>
+                            <p>Easy for organisers
+                                <br />Easy for competitors
+                            <br/><span class="strong">Online payment</p>
                         </div>
-                        <div class="col-sm-7">
-                            <img class="img-responsive" src="{{ URL::asset('img/template-homepage.png') }}" alt="">
+                        <div class="col-sm-6">
+                            <img class="img-responsive" src="{{ URL::asset('img/template-emmons-kneeling.png') }}" alt="">
                         </div>
                     </div>
-                </div>
-                <div class="item">
-                    <div class="row">
-
-                        <div class="col-sm-7 text-center">
-                            <img class="img-responsive" src="{{ URL::asset('img/template-mac.png') }}" alt="">
-                        </div>
-
-                        <div class="col-sm-5">
-                            <h2>46 HTML pages full of features</h2>
-                            <ul class="list-style-none">
-                                <li>Sliders and carousels</li>
-                                <li>4 Header variations</li>
-                                <li>Google maps, Forms, Megamenu, CSS3 Animations and much more</li>
-                                <li>+ 11 extra pages showing template features</li>
-                            </ul>
-                        </div>
-
-                    </div>
+                {{-- duplicate end --}}
                 </div>
             </div>
             <!-- /.project owl-slider -->

@@ -1,5 +1,6 @@
 <?php use App\User; ?>
 <div class="tab-pane" id="competitors">
+    <a href="{{ action('EventsController@export', ['type' => 'competitor_entries', 'id' => $event->id]) }}"><i class="fa fa-download"></i><br>Download to Excel</a>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
         <th>Competitor</th>

@@ -98,7 +98,8 @@ class EventsController extends Controller
     {
 
         $tags = Tag::lists('name', 'id');
-        return view('events.create')->with(['tags' => $tags]);
+        $currencies = array('select' => 'Select...', 'GBP' => 'GBP');
+        return view('events.create')->with(['tags' => $tags, 'currencies' => $currencies]);
     }
 
     /**
@@ -139,7 +140,8 @@ class EventsController extends Controller
         if ($event->lateEntries == 1) {
             $lateEntries = true;
         }
-        return view('events.edit')->with(['event' => $event, 'tags' => $tags, 'lateEntriesCurrent' => $lateEntries,'registrationCurrent' => $registration]);
+        $currencies = array('select' => 'Select...', 'GBP' => 'GBP');
+        return view('events.edit')->with(['event' => $event, 'tags' => $tags, 'lateEntriesCurrent' => $lateEntries,'registrationCurrent' => $registration, 'currencies' => $currencies]);
     }
 
     /**
@@ -287,6 +289,15 @@ class EventsController extends Controller
         //$event = Event::findOrFail($id);
         $event = Event::where('slug','=',$slug)->firstOrFail();
 
+        //update the image (delete, replace)
+        if ($request->file('image')) {
+            $imageName = $event->id . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(
+                base_path() . '/public/img/events/',$imageName
+            );
+            $event->imageFilename = $imageName;
+        }
+
         //update the event
         $event->update($request->all());
         //sync the tags
@@ -393,10 +404,87 @@ class EventsController extends Controller
             })->export('xlsx');
             return redirect()->back();
         }
+        // Download ALL the data in one mega spreadsheet (for the overview tab)
         if ($type == 'event') {
             $event = Event::findOrFail($id);
             $competitions = $event->competitions()->get();
+            $megaheader = $header;
             $sheets = array();
+            //Sheet showing all competitors, their entries, their answers, extras and how much paid
+            // -- HEADERS --
+            // ---- competitions --
+            foreach ($event->competitions()->get() as $competition) {
+                $megaheader[] = $competition->name;
+            }
+            // ---- questions --
+            foreach ($event->questions()->get() as $question) {
+                $megaheader[] = $question->question;
+            }
+            // ---- extras --
+            foreach ($event->extras()->get() as $extra) {
+                //fill in once extras is worked out
+            }
+            // ---- financial --
+            $megaheader[] = "Entry fees (total)";
+
+            //MEGASHEET INITIALISE
+            $megasheet = array($megaheader);
+
+            // DATA ENTRY TO MEGASHEET
+            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $competitor_ids = $entries->pluck('user_id')->unique();
+            foreach ($competitor_ids as $competitor_id) {
+                $thisCompetitor = User::findOrFail($competitor_id);
+                $row = array(
+                    $thisCompetitor->firstname . " " . $thisCompetitor->lastname,
+                    $thisCompetitor->id + 1000,
+                    $thisCompetitor->email,
+                    $thisCompetitor->club,
+                    $thisCompetitor->homeCountry,
+                );
+
+                // -- ENTRIES --
+                $competitorEntries = $event->entries()->get()->where('user_id',$competitor_id);
+                $competitorEntriesCompetitionIDs = array();
+                foreach ($competitorEntries as $entry) {
+                    $competitorEntriesCompetitionIDs[$entry->competition_id] = $entry->competition_id;
+                }
+                foreach ($event->competitions()->get() as $competition) {
+                    // if entry->competition_id exists in $competitorEntries then entered row, else empty row.
+                    if (key_exists($competition->id, $competitorEntriesCompetitionIDs)) {
+                        $row[] = "x";
+                    } else {
+                        $row[] = " ";
+                    }
+                }
+                // -- ANSWERS --
+                $competitorAnswers = $event->answers()->get()->where('competitor_id',$competitor_id);
+                $competitorAnsweredQuestionIDs = array();
+                foreach ($competitorAnswers as $answer) {
+                    $competitorAnsweredQuestionIDs[$answer->question_id] = $answer->question_id;
+                }
+                //@TODO: this needs to be tested with a user who has answered questions. 5/7/16
+                foreach ($competitorAnswers as $competitorAnswer) {
+                    if (key_exists($competitorAnswer->question_id,$competitorAnsweredQuestionIDs)) {
+                        $row[] = $competitorAnswer->answer;
+                    } else {
+                        $row[] = "N/A";
+                    }
+                }
+                // -- EXTRAS --
+                //@TODO: fill in once extras is worked out
+
+                // -- ENTRY FEES TOTAL --
+                $row[] = "subtotal here (£)";
+
+                // Add the row to the megasheet
+                $megasheet[] = $row;
+            }
+
+            //Add the megasheet to sheets
+            $sheets["Competitors"] = $megasheet;
+
+            //Sheet for each competition and detail with the entries
             foreach ($competitions as $competition) {
                 $details = $competition->details()->get();
                 foreach ($details as $detail) {
@@ -422,6 +510,10 @@ class EventsController extends Controller
                 $excel->setCreator('Foresight Entries');
                 $excel->setCompany('ForesightEntries.com');
                 $excel->setDescription('Competitors List');
+                $infosheet = $sheets["Competitors"];
+                $excel->sheet('Competitors', function($sheet) use ($infosheet) {
+                    $sheet->fromArray($infosheet);
+                });
                 foreach ($competitions as $competition) {
                     $details = $competition->details()->get();
                     foreach ($details as $detail) {
@@ -491,6 +583,94 @@ class EventsController extends Controller
                 $excel->setCompany("ForesightEntries.com");
                 $excel->setDescription("Competitors List");
                 $excel->sheet('Competitors', function($sheet) use ($sheetdata) {
+                    $sheet->fromArray($sheetdata);
+                });
+            })->export('xlsx');
+            return redirect()->back();
+        }
+        if ($type == 'competitor_entries') {
+            $event = Event::findOrFail($id);
+            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $competitor_ids = $entries->pluck('user_id')->unique();
+            //Add competition names to the header
+            foreach ($event->competitions()->get() as $competition) {
+                $header[] = $competition->name;
+            }
+            $sheetdata = array($header);
+            foreach ($competitor_ids as $competitor_id) {
+                $competitorEntries = $event->entries()->get()->where('user_id', $competitor_id);
+                $competitorEntriesCompetitionIDs = array();
+                foreach ($competitorEntries as $entry) {
+                    $competitorEntriesCompetitionIDs[$entry->competition_id] = $entry->competition_id;
+                }
+                $thisCompetitor = User::findOrFail($competitor_id);
+                $row = array(
+                    $thisCompetitor->firstname . " " . $thisCompetitor->lastname,
+                    $thisCompetitor->id + 1000,
+                    $thisCompetitor->email,
+                    $thisCompetitor->club,
+                    $thisCompetitor->homeCountry,
+                );
+                foreach ($event->competitions()->get() as $competition) {
+                    // if entry->competition_id exists in $competitorEntries then entered row, else empty row.
+                    if (key_exists($competition->id, $competitorEntriesCompetitionIDs)) {
+                        $row[] = "x";
+                    } else {
+                        $row[] = " ";
+                    }
+                }
+                $sheetdata[] = $row;
+            }
+            Excel::create("Competitor entries", function ($excel) use ($sheetdata) {
+                $excel->setTitle('Competitor_entries');
+                $excel->setCreator("Foresight Entries");
+                $excel->setCompany("ForesightEntries.com");
+                $excel->setDescription("Competitors List");
+                $excel->sheet('Competitor_entries', function($sheet) use ($sheetdata) {
+                    $sheet->fromArray($sheetdata);
+                });
+            })->export('xlsx');
+            return redirect()->back();
+        }
+        if ($type == 'competitor_answers') {
+            $event = Event::findOrFail($id);
+            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $competitors = $entries->pluck('user_id')->unique();
+            //Add the questions to the header
+            foreach ($event->questions()->get() as $question) {
+                $header[] = $question->question;
+            }
+            $sheetdata = array($header);
+            foreach ($competitors as $competitor) {
+                $competitorAnswers = $event->answers()->get()->where('competitor_id',$competitor);
+                $competitorAnsweredQuestionIDs = array();
+                foreach ($competitorAnswers as $answer) {
+                    $competitorAnsweredQuestionIDs[$answer->question_id] = $answer->question_id;
+                }
+                $thisCompetitor = User::findOrFail($competitor);
+                $row = array(
+                    $thisCompetitor->firstname . " " . $thisCompetitor->lastname,
+                    $thisCompetitor->id + 1000,
+                    $thisCompetitor->email,
+                    $thisCompetitor->club,
+                    $thisCompetitor->homeCountry,
+                );
+                //@TODO: this needs to be tested with a user who has answered questions. 5/7/16
+                foreach ($competitorAnswers as $competitorAnswer) {
+                    if (key_exists($competitorAnswer->question_id,$competitorAnsweredQuestionIDs)) {
+                        $row[] = $competitorAnswer->answer;
+                    } else {
+                        $row[] = "N/A";
+                    }
+                }
+                $sheetdata[] = $row;
+            }
+            Excel::create("Competitor answers", function($excel) use ($sheetdata) {
+                $excel->setTitle('Competitor_answers');
+                $excel->setCreator("Foresight Entries");
+                $excel->setCompany("ForesightEntries.com");
+                $excel->setDescription("Competitor answers");
+                $excel->sheet('Competitor_answers', function($sheet) use ($sheetdata) {
                     $sheet->fromArray($sheetdata);
                 });
             })->export('xlsx');

@@ -39,6 +39,8 @@
 	
 .owl-carousel .owl-item{
 	float: left;
+	width: 100%; /* added by Rachel */
+	height: auto; /* added by Rachel */
 }
 .owl-controls .owl-page,
 .owl-controls .owl-buttons div{

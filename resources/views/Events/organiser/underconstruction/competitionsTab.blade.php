@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-lg-12">
             <h3>Add competitions and details</h3>
-            <button type="button" class="btn" data-toggle="modal" data-target="#addCompetitionModal" id="competitionModalButton">Add a competition to your event</button><br>
+            <p> If you have non-squadded additional competitions like ladies, pairs or aggregates, we recommend that they be added in the "Optional Extras" section rather than here.</p>
+            <button type="button" class="btn" data-toggle="modal" data-target="#addCompetitionModal" id="competitionModalButton">Add a competition to your event.</button><br>
             <p></p>
             <!-- Foreach competition -->
             @foreach ($competitions->reverse() as $competition)
