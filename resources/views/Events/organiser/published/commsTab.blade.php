@@ -19,8 +19,12 @@
                 <label for="to" class="control-label">To: ALL COMPETITORS</label>
             </div>
             <div class="form-group">
-                <label for="message" class="control-label">Message:</label>
-                <input type="text" class="form-control" name="message">
+                {!! Form::label('Your message:') !!}
+                {!! Form::textarea('message', null,
+                    array('required',
+                        'class' => 'form-control',
+                        'placeholder' => 'Type here'
+                    )) !!}
             </div>
         </div>
         <div class="modal-footer">
