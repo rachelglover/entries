@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Khill\Lavacharts\Lavacharts;
+use App\Mail\NewEvent;
 
 class EventsController extends Controller
 {
@@ -36,6 +38,8 @@ class EventsController extends Controller
 
     /**
      * List all the current events
+     * This should return a list of the current events. This is some text that I'm typing for no reason
+     * whatsoever!
      *
      * @return $this
      */
@@ -86,6 +90,8 @@ class EventsController extends Controller
             $preview = 'true';
         }
         $chart = $this->produceCompetitionsFilledchart($event->competitions()->get());
+
+
         return view('events.show')->with(['event' => $event, 'user' => $user, 'preview' => $preview, 'chart' => $chart, 'guest' => $guest]);
     }
 
@@ -97,9 +103,10 @@ class EventsController extends Controller
     public function create()
     {
 
-        $tags = Tag::lists('name', 'id');
+        $tags = Tag::pluck('name', 'id');
         $currencies = array('select' => 'Select...', 'GBP' => 'GBP');
-        return view('events.create')->with(['tags' => $tags, 'currencies' => $currencies, 'event' => null]);
+        $paymentOptions = array('select' => 'Select...', 'bank' => 'Bank transfer', 'paypal' => 'PayPal');
+        return view('events.create')->with(['tags' => $tags, 'currencies' => $currencies, 'paymentOptions' => $paymentOptions, 'event' => null]);
     }
 
     /**
@@ -113,6 +120,11 @@ class EventsController extends Controller
 
         $event = $this->createEvent($request);
 
+        $user = Auth::user();
+
+        //Send an email to say event created.
+        Mail::to($user->email)->send(new NewEvent($event, $user));
+
         //flash a message to the user
         \Flash::success('Your event was created successfully. Now you need to add competitions and details');
 
@@ -122,11 +134,11 @@ class EventsController extends Controller
 
     /**
      * @param $id
-     * @return $this
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($slug)
     {
-        $tags = Tag::lists('name', 'id');
+        $tags = Tag::pluck('name', 'id');
 
         //$event = Event::findOrFail($id);
         $event = Event::where('slug', '=', $slug)->firstOrFail();
@@ -141,7 +153,9 @@ class EventsController extends Controller
             $lateEntries = true;
         }
         $currencies = array('select' => 'Select...', 'GBP' => 'GBP');
-        return view('events.edit')->with(['event' => $event, 'tags' => $tags, 'lateEntriesCurrent' => $lateEntries,'registrationCurrent' => $registration, 'currencies' => $currencies]);
+        $paymentOptions = array('select' => 'Select...', 'bank' => 'Bank transfer', 'paypal' => 'PayPal');
+
+        return view('events.edit')->with(['event' => $event, 'tags' => $tags, 'lateEntriesCurrent' => $lateEntries,'registrationCurrent' => $registration, 'currencies' => $currencies, 'paymentOptions' => $paymentOptions]);
     }
 
     /**
@@ -282,7 +296,7 @@ class EventsController extends Controller
     private function transferredEntryFees() {
         return 0.00;
     }
-    
+
     /**
      * Updates the event
      *
@@ -334,6 +348,7 @@ class EventsController extends Controller
         //event (and set status)
         $data = $request->all();
 
+
         //Create a slug from the event name
         $slug = Str::slug($data['name']);
         $numSlugs = Event::where('slug','=',$slug)->count();
@@ -350,19 +365,27 @@ class EventsController extends Controller
         //save the event
         $event = Auth::user()->events()->create($data);
 
-        //Upload event image
-        $imageName = $event->id . '.' . $request->file('image')->getClientOriginalExtension();
-        $request->file('image')->move(
-            base_path() . '/public/img/events/',$imageName
-        );
+        //Upload event image - original
+        $imageName = 'stock.jpg';
+        if ($request->file('image')) {
+            $imageName = $event->id . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(
+                base_path() . '/public/img/events/',$imageName
+            );
+        } else {
+            #they didn't upload an image, so make the event use the stock image instead.
+            $imageName = 'stock.jpg';
+        }
+
 
         //Insert imageName into the database
         $event->imageFilename = $imageName;
         $event->save();
 
+
         //event tags
         $this->syncTags($event, $request->input('taglist'));
-
+        $userEmail = Auth::user()->email;
         return $event;
     }
 
@@ -373,7 +396,7 @@ class EventsController extends Controller
         $header = array('Competitor name','ID','Email','Club','Home Country');
         if ($type == 'competitors') {
             $event = Event::findOrFail($id);
-            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $entries = $event->entries()->get()->sortBy('name');
             $competitor_ids = $entries->pluck('user_id')->unique();
             $competitions = $event->competitions()->get();
             $header = array();
@@ -438,7 +461,7 @@ class EventsController extends Controller
             $megasheet = array($megaheader);
 
             // DATA ENTRY TO MEGASHEET
-            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $entries = $event->entries()->get()->sortBy('name');
             $competitor_ids = $entries->pluck('user_id')->unique();
             foreach ($competitor_ids as $competitor_id) {
                 $thisCompetitor = User::findOrFail($competitor_id);
@@ -495,7 +518,7 @@ class EventsController extends Controller
             foreach ($competitions as $competition) {
                 $details = $competition->details()->get();
                 foreach ($details as $detail) {
-                    $entries = $detail->entries()->get()->sortBy('user_lastname');
+                    $entries = $detail->entries()->get()->sortBy('name');
                     $sheetdata = array($header);
                     $competitor_ids = $entries->pluck('user_id')->unique();
                     foreach ($competitor_ids as $competitor_id) {
@@ -538,7 +561,7 @@ class EventsController extends Controller
             $details = $competition->details()->get();
             $sheets = array();
             foreach ($details as $detail) {
-                $entries = $detail->entries()->get()->sortBy('user_lastname');
+                $entries = $detail->entries()->get()->sortBy('name');
                 $sheetdata = array($header);
                 $competitor_ids = $entries->pluck('user_id')->unique();
                 foreach ($competitor_ids as $competitor_id) {
@@ -570,18 +593,18 @@ class EventsController extends Controller
         }
         if ($type == 'detail') {
             $detail = Detail::findOrFail($id);
-            $entries = $detail->entries()->get()->sortBy('user_lastname');
+            $entries = $detail->entries()->get()->sortBy('name');
             $sheetdata = array($header);
             $competitor_ids = $entries->pluck('user_id')->unique();
             foreach ($competitor_ids as $competitor_id) {
                 $competitor = User::findOrFail($competitor_id);
                 $row = array(
-                        $competitor->firstname . " " . $competitor->lastname,
-                        $competitor->id + 1000,
-                        $competitor->email,
-                        $competitor->club,
-                        $competitor->homeCountry,
-                    );
+                    $competitor->firstname . " " . $competitor->lastname,
+                    $competitor->id + 1000,
+                    $competitor->email,
+                    $competitor->club,
+                    $competitor->homeCountry,
+                );
                 $sheetdata[] = $row;
             }
             Excel::create($detail->competition()->first()->name . "-" . $detail->name, function ($excel) use ($sheetdata) {
@@ -597,7 +620,7 @@ class EventsController extends Controller
         }
         if ($type == 'competitor_entries') {
             $event = Event::findOrFail($id);
-            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $entries = $event->entries()->get()->sortBy('name');
             $competitor_ids = $entries->pluck('user_id')->unique();
             //Add competition names to the header
             foreach ($event->competitions()->get() as $competition) {
@@ -641,7 +664,7 @@ class EventsController extends Controller
         }
         if ($type == 'competitor_answers') {
             $event = Event::findOrFail($id);
-            $entries = $event->entries()->get()->sortBy('user_lastname');
+            $entries = $event->entries()->get()->sortBy('name');
             $competitors = $entries->pluck('user_id')->unique();
             //Add the questions to the header
             foreach ($event->questions()->get() as $question) {

@@ -19,7 +19,7 @@
                         <h4>{{$competition->name}}</h4>
                         <p>{{$competition->description}}</p>
                         Click on the detail names to the left to see the current entries.<br>
-                        <a href="{{ action('EventsController@export', ['type' => 'competition', 'id' => $competition->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download fa-2x"></i><br>Download the entries for all details in this competition (Excel)</a>
+                        {{--<a href="{{ action('EventsController@export', ['type' => 'competition', 'id' => $competition->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download fa-2x"></i><br>Download the entries for all details in this competition (Excel)</a>--}}
 
                     </div>
                     @foreach ($competition->details()->get() as $detail)
@@ -27,7 +27,7 @@
                             <h4>{{$competition->name }} > {{$detail->name}}</h4>
                             @if ($detail->entries()->count() > 0)
                                 {{$detail->description}}
-                                <a href="{{ action('EventsController@export', ['type' => 'detail', 'id' => $detail->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download fa-2x"></i><br>Download the entries for this detail (Excel)</a>
+                                {{--<a href="{{ action('EventsController@export', ['type' => 'detail', 'id' => $detail->id]) }}" data-toggle="tooltip" data-placement="right" title="The also download includes competitor email addresses"><i class="fa fa-download fa-2x"></i><br>Download the entries for this detail (Excel)</a>--}}
                             <table class="table table-striped table-condensed">
                                 <thead>
                                     <th>Competitor</th>
@@ -36,7 +36,7 @@
                                     <th>Home Country</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($detail->entries()->get()->sortBy('user_lastname') as $entry)
+                                    @foreach ($detail->entries()->get()->sortBy('name') as $entry)
                                         {{! $thisUser = $entry->user()->first() }}
                                         <tr>
                                             <td><span class="text-uppercase">{{$thisUser->lastname}}</span>, {{$thisUser->firstname}}</td>

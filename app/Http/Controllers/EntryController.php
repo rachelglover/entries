@@ -59,7 +59,7 @@ class EntryController extends Controller
         $user = Auth::user();
 
         //1. Insert each competition entry into the database with 'unpaid' status
-        
+
         foreach ($data['competitions'] as $competition_id => $detail_id) {
             if ($detail_id != "noEntry") {
                 $entryData = array();
@@ -67,7 +67,7 @@ class EntryController extends Controller
                 $entryData['event_id'] = $data['event_id'];
                 $entryData['competition_id'] = $competition_id;
                 $entryData['detail_id'] = $detail_id;
-                $entryData['user_lastname'] = $user->lastname;
+                $entryData['name'] = $user->name;
                 $entryData['paymentStatus'] = 'unpaid';
                 $entryData['discounts_applied'] = $data['discounts_applied'];
                 //Now insert the data
@@ -75,7 +75,7 @@ class EntryController extends Controller
                 Entry::create($entryData);
             }
         }
-        
+
         //2. Insert question answers in to answers table
         if (key_exists('questions',$data)) {
             foreach ($data['questions'] as $question_id => $question_answer) {
@@ -134,8 +134,8 @@ class EntryController extends Controller
                 array('name' => "Entry fees ($event->name)", 'quantity' => '1', 'price' => $data['total'])
             ));
 
-            //SO THE BIG QUESTION HERE IS HOW DO I SEND THE PAYMENTS IN BITS TO ME AND 
-            //EVENT ORGANISER? Not right now. I'll do it manually at the closing date. 
+            //SO THE BIG QUESTION HERE IS HOW DO I SEND THE PAYMENTS IN BITS TO ME AND
+            //EVENT ORGANISER? Not right now. I'll do it manually at the closing date.
 
             $response = $transaction->send();
 
@@ -143,7 +143,7 @@ class EntryController extends Controller
                 $response->redirect();
             } else {
                 echo $response->getMessage();
-                //do something here, presumably redirect to an error page. 
+                //do something here, presumably redirect to an error page.
             }
         } catch (\Exception $e) {
             echo "Exception caught while attempting authorize.\n";
@@ -172,7 +172,7 @@ class EntryController extends Controller
                 $competition = Competition::findOrFail($competition_id);
                 $detail = Detail::findOrFail($detail_id);
                 $entries[$competition_id] = array('competition' => $competition, 'detail' => $detail);
-                $compSubTotal += $competition->fee; 
+                $compSubTotal += $competition->fee;
             }
         }
 
@@ -237,7 +237,7 @@ class EntryController extends Controller
             $percentage = $pd->value / 100;
             $discount = $discountedSubtotal * $percentage;
             $percentageDiscountValues[$pd->id] = $discount;
-            $discountedSubtotal = $discount;
+            $discountedSubtotal = $discountedSubtotal - $discount;
             $discountedRegistrationFee = $discountedRegistrationFee * $percentage;
         }
 
@@ -247,7 +247,7 @@ class EntryController extends Controller
             $lateEntryFee = $event->lateEntriesFee;
         }
         //FORESIGHT FEE
-        $foresightFee = 2.99;
+        $foresightFee = env('FORESIGHT_FEE');
 
         $finalsubtotal = $discountedSubtotal + $discountedRegistrationFee + $lateEntryFee + $foresightFee;
 
@@ -285,7 +285,7 @@ class EntryController extends Controller
     }
 
     /**
-     * User is returned successfully from Paypal after paying their fees. 
+     * User is returned successfully from Paypal after paying their fees.
      */
     public function postPaypalComplete( Request $request, $event_id) {
 
@@ -362,7 +362,7 @@ class EntryController extends Controller
         \Flash::success("No problem! You're detail has been changed to " . $detail->dateTime->toDateTimeString());
         return redirect(action('PagesController@userEntries'));
     }
-    
+
     /**
      * Competitor cancels one competition entry, but not their entire entry to all competitions
      */

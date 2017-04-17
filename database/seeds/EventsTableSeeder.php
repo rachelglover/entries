@@ -30,9 +30,9 @@ class EventsTableSeeder extends Seeder
                 $featured = 0;
             }
 
-            $year = 2016;
-            $month = rand(5,12);
-            $startDate = rand(8,28);
+            $year = 2017;
+            $month = rand(4,12);
+            $startDate = rand(8,28); #8 is imp because of closingd ate
             $endDate = $startDate + 2;
             $closingDate = $startDate - 7;
             $statuses = array('unpublished','published', 'published','published');
@@ -48,6 +48,17 @@ class EventsTableSeeder extends Seeder
             if ($reg == 1) {
                 $regFee = rand(0,10);
             }
+            $paymentOption = array_rand(array('bank','paypal'));
+            $bankAccount = null;
+            $sortCode = null;
+            $paypalAddress = null;
+            if ($paymentOption == 'bank') {
+                $bankAccount = '12345678';
+                $sortCode = '40-47-31';
+            }
+            if ($paymentOption == 'paypal') {
+                $paypalAddress = 'rachelglover@gmail.com';
+            }
             $event_id = DB::table('events')->insertGetId([
                 'user_id' => 1,
                 'name' => 'Awesome event ' . $i,
@@ -57,7 +68,11 @@ class EventsTableSeeder extends Seeder
                 'startDate' => Carbon\Carbon::createFromDate($year, $month, $startDate,'Europe/London'),
                 'endDate' => Carbon\Carbon::createFromDate($year, $month, $endDate, 'Europe/London'),
                 'closingDate' => Carbon\Carbon::createFromDate($year, $month, $closingDate, 'Europe/London'),
-                'paypal' => 'rachelglover@gmail.com',
+                'payment_option' => $paymentOption,
+                'payment_account' => $bankAccount,
+                'payment_sortcode' => $sortCode,
+                'payment_paypal_address' => $paypalAddress,
+                'website' => 'www.google.com',
                 'status' => $status,
                 'lateEntries' => $late,
                 'lateEntriesFee' => $lateFee,
@@ -107,8 +122,9 @@ class EventsTableSeeder extends Seeder
                         'competition_id' => $competition->id,
                         'detail_id' => $detail->id,
                         'transaction_id' => null,
-                        'user_lastname' => $user->lastname,
+                        'name' => $user->name,
                         'paymentStatus' => 'paid',
+                        'discounts_applied' => '',
                     ]);
                     $users->forget($user->id);
                     $detail = $details->random();

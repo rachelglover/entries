@@ -203,7 +203,7 @@
             <table class="table table-striped table-bordered">
                 <tr>
                     <td class="bold">Name</td>
-                    <td>{{ $user->firstname }} {{ $user->lastname }}</td>
+                    <td>{{ $user->name }} </td>
                 </tr>
                 <tr>
                     <td class="bold">Email</td>

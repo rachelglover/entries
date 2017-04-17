@@ -6,9 +6,10 @@
         <div class="row">
             <div class="col-md-7">
                 @if ($event->status == 'unpublished')
-                <h2>Under construction:</h2>
+                    <h2>Under construction: {{ $event->name }}</h2>
+                @elseif ($event->status == 'published')
+                    <h3>Dashboard: {{$event->name}}</h3>
                 @endif
-                <h3>{{$event->name}}</h3>
             </div>
         </div>
     </div>
@@ -22,12 +23,9 @@
         @include('Events.organiser.underconstruction.modals.publishEvent')
         @include('Events.organiser.underconstruction.modals.addExtra')
 
-
-
     @if ($event->status == 'unpublished')
         <div class="row">
             <div class="col-lg-12">
-                <div class="lead"><b>Hi {{ $user->firstname }}!</b></div>
                 <p>Now that we have the basic information about your event you can add competitions and details to it. You can also add optional extras, discounts and questions that you would like answered on the entry form. Once you've added all your competitions and you're happy with how the entry form will look, press the green button to publish your event on the website and allow people to enter.</p>
                 <p>You can come back to this page at any time by going to "My Account" and then "My Events".</p>
                 <button type="button" class="btn btn-sm btn-default"><a href="{{ action('EventsController@edit',$event->slug) }}">Edit basic event info</a></button>
@@ -57,11 +55,6 @@
     @endif {{-- end of 'unpublished' event admin --}}
 
     @if ($event->status == 'published')
-        <div class="row">
-            <div class="col-lg-12">
-                <h4>Hello {{ $user->firstname }}, welcome to your event dashboard.</h4>
-            </div>
-        </div>
         <div class="col-lg-12">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#overview" data-toggle="tab"><i class="fa fa-bar-chart"></i>Overview</a></li>

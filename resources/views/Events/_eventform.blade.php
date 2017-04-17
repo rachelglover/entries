@@ -9,13 +9,13 @@
             <td width="33%">
                 <div class="form-group" style="padding:0px 10px 0px 0px;">
                     {!! Form::label('startDate', 'Start date:') !!}
-                    {!! Form::input('date','startDate', null, ['class' => 'form-control', 'id' => 'startDate']) !!}
+                    {!! Form::text('startDate', null, ['class' => 'form-control', 'id' => 'startDate']) !!}
                 </div>
             </td>
             <td width="33%">
                 <div class="form-group" style="padding:0px 0px 0px 10px;">
                     {!! Form::label('endDate', 'End date:') !!}
-                    {!! Form::input('date','endDate', null, ['class' => 'form-control', 'id' => 'endDate']) !!}
+                    {!! Form::text('endDate', null, ['class' => 'form-control', 'id' => 'endDate']) !!}
                 </div>
             </td>
         </tr>
@@ -23,7 +23,7 @@
             <td colspan="2">
                 <div class="form-group">
                     {!! Form::label('closingDate', 'Closing date for entries:') !!}
-                    {!! Form::input('date','closingDate', null, ['class' => 'form-control', 'id' => 'closingDate']) !!}
+                    {!! Form::text('closingDate', null, ['class' => 'form-control', 'id' => 'closingDate']) !!}
                 </div>
             </td>
         </tr>
@@ -37,11 +37,12 @@
 
     <div class="form-group">
         {!! Form::label('image','Event image') !!}
-        @if ($event != null) {
+        <p class="small">This is the main image that will be used for your event on the website. If you don't upload an image, a stock image will be used instead.</p>
+        @if ($event != null)
             <p class="small">This is your current image:</p>
             {{! $image =  url('/') . '/img/events/' . $event->imageFilename }}
             <img src="{{ $image }}" style="width: 150px" />
-        }
+
         @endif
         {!! Form::file('image', null) !!}
 
@@ -60,9 +61,25 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('paypal', 'Paypal email address:') !!}
-        <p class="small">We will send the entry fees to the PayPal account associated with this email address so <b>please type carefully</b>. You can sign up for a PayPal account here: <a href="http://www.paypal.com" target="_blank">www.paypal.com</a>.</p>
-        {!! Form::text('paypal', null, ['class' => 'form-control']) !!}
+        {!! Form::label('payment_option', 'Method of payment:') !!}
+        <p class="small">We send entry fees recieved during each week to event organisers every Saturday. We can transfer the entry fees to a PayPal account or to your bank account.</p>
+        {!! Form::select('payment_option', $paymentOptions, null, ['class' => 'form-control']) !!}
+    </div>
+
+    <div class="form-group" id="payment_paypal_address_div">
+        {!! Form::label('payment_paypal_address', 'Paypal email address:') !!}
+        <p class="small">Please type carefully. You can sign up for a PayPal account here: <a href="http://www.paypal.com" target="_blank">www.paypal.com</a>.</p>
+        {!! Form::text('payment_paypal_address', null, ['class' => 'form-control']) !!}
+    </div>
+
+    <div class="form-group" id="payment_account_div">
+        {!! Form::label('payment_account', 'Bank account number') !!}
+        {!! Form::text('payment_account', null, ['class' => 'form-control']) !!}
+    </div>
+
+    <div class="form-group" id="payment_sortcode_div">
+        {!! Form::label('payment_sortcode', 'Bank sort code') !!}
+        {!! Form::text('payment_sortcode', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">
@@ -94,6 +111,7 @@
 
     <div class="form-group">
         {!! Form::label('taglist', 'Tags:') !!}
+        <p>You must choose at least one tag</p>
         {!! Form::select('taglist[]', $tags, null, ['id' => 'taglist', 'multiple' => 'multiple','class' => 'form-control']) !!}
     </div>
 

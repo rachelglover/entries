@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Competition extends Model
 {
-    //Fields that the user can change
+    //
     protected $fillable = [
         'name',
         'description',
@@ -15,23 +15,18 @@ class Competition extends Model
     ];
 
     /**
-     * Get the event that this competition belongs to
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the event this competition belongs to
      */
     public function event() {
         return $this->belongsTo('App\Event');
     }
 
     /**
-     * Get all the details associated with this competition.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get all the details associated with this competition
      */
     public function details() {
         return $this->hasMany('App\Detail');
     }
-
 
     /**
      * Get all the entries associated with this competition
@@ -40,3 +35,4 @@ class Competition extends Model
         return $this->hasMany('App\Entry');
     }
 }
+

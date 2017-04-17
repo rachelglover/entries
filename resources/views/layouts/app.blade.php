@@ -21,7 +21,7 @@
     <link href="{{ URL::asset('css/animate.css') }}" rel="stylesheet">
 
     <!-- Theme stylesheet, if possible do not edit this stylesheet -->
-    <link href="{{ URL::asset('css/style.default.css') }}" rel="stylesheet" id="theme-stylesheet">
+    <link href="{{ URL::asset('css/style.violet.css') }}" rel="stylesheet" id="theme-stylesheet">
 
     <!-- Custom stylesheet - for your changes -->
     <link href="{{ URL::asset('css/custom.css') }}" rel="stylesheet">
@@ -110,7 +110,7 @@ _________________________________________________________ -->
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="dropdown">
-                                    <a href="{{ action('PagesController@index') }}">Home</b></a>
+                                    <a href="{{ action('PagesController@index') }}">Home</a>
                                 </li>
                                 <li class="dropdown">
                                     <a href="{{ action('EventsController@index') }}">All events</a>
@@ -210,7 +210,7 @@ _________________________________________________________ -->
 <div id="copyright">
     <div class="container">
         <div class="col-md-12">
-            <p class="pull-left">&copy; 2016 <a href="http://www.foresightshooting.co.uk">Foresight Shooting Ltd.</a></p>
+            <p class="pull-left">&copy; 2017 <a href="http://www.foresightentries.com">Foresight Entries</a></p>
         </div>
     </div>
 </div>

@@ -9,10 +9,11 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Omnipay\Omnipay;
+use App\Mail\NewEventLive;
 
 class PagesController extends Controller
 {
-    
+
     /**
      * Show the home page
      *
@@ -85,7 +86,7 @@ class PagesController extends Controller
         $user = Auth::user();
         return view('user.profile')->with(['user' => $user]);
     }
-    
+
 
     /**
      * @param Request $request
@@ -96,13 +97,29 @@ class PagesController extends Controller
         //get the event
         //$event = Event::findOrFail($id);
         $event = Event::where('slug','=',$slug)->firstOrFail();
-        if ($event) {
-            $event->status = "published";
-            $event->save();
+
+        //Check that the event has at least one competition
+        $competitions = $event->competitions();
+        if ($competitions->count() >= 1) {
+            foreach ($competitions->get() as $competition) {
+                if ($competition->details()->count() == 0) {
+                    \Flash::error('Sorry, we couldn\'t make your event live because one of your competitions ('. $competition->name . ') doesn\'t have a detail');
+                    return back();
+                } else {
+                    $event->status = "published";
+                    $event->save();
+                    $user = \Auth::user();
+                    \Flash::success('Congratulations, your event is now on the website and ready to accept entries');
+                    //Send an email to say event published
+                    Mail::to($user->email)->send(new NewEventLive($event, $user));
+
+                    return redirect()->action('EventsController@admin', $event->slug)->with(['user' => $user, 'event' => $event]);
+                }
+            }
+        } else {
+            \Flash::error('Sorry, we couldn\'t make your event live because it doesn\'t contain any competitions.');
+            return back();
         }
-        $user = Auth::user();
-        \Flash::success('Congratulations, your event is now live and ready to accept entries');
-        return redirect()->action('EventsController@admin', $event->slug)->with(['user' => $user, 'event' => $event]);
     }
     /**
      * Site administration page for me - toggle Featured event
@@ -141,7 +158,7 @@ class PagesController extends Controller
                 $message->to('contact@foresightentries.com', 'Admin')->subject('Contact from ForesightEntries.com');
             });
 
-        \Flash::success('Thanks for contacting us! We\'ve received your message and We\'ll respond as soon as possible (normally within 24 hours or less).');
+        \Flash::success('Thanks for contacting us! We\'ve received your message and will respond as soon as possible (normally within 24 hours or less).');
         return redirect()->back();
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Detail extends Model
 {
-    //fields that the user can change.
+    //
     protected $fillable = [
         'name',
         'max',
@@ -14,15 +14,13 @@ class Detail extends Model
         'competition_id'
     ];
 
-    //carbon date
+    //carbond ate
     protected $dates = [
         'dateTime',
     ];
 
     /**
      * Get the competition that this detail belongs to
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function competition() {
         return $this->belongsTo('App\Competition');
@@ -30,8 +28,6 @@ class Detail extends Model
 
     /**
      * Get all the entries for this detail
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function entries() {
         return $this->hasMany('App\Entry');
@@ -41,7 +37,7 @@ class Detail extends Model
      * Return the number of free places on this detail
      */
     public function placesLeft() {
-        $entries = Entry::where('detail_id','=',$this->id);
+        $entries = Entry::where('detail_id', '=', $this->id);
         $numEntries = $entries->count();
         $left = $this->max - $numEntries;
         return $left;

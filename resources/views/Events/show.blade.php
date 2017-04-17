@@ -52,9 +52,7 @@
                         <p><a href="{{$event->getGoogleMapLink()}}" target="_blank">click here</a></p>
                         <h4>Tags</h4>
                         <p>
-                            @foreach ($event->tags()->get() as $tag)
-                                {{ $tag->name }},
-                            @endforeach
+                            {{$event->tagstring()}}
                         </p>
                         <h4>Dates</h4>
                         <p>{{ $event->startDate->format('l jS \\of F Y') }} to {{ $event->endDate->format('l jS \\of F Y') }}</p>

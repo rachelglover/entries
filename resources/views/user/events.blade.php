@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-7">
-                <h1>{{ $user->firstname }}'s events</h1>
+                <h1>Your events</h1>
             </div>
         </div>
     </div>

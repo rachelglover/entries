@@ -2,23 +2,35 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+class User extends Authenticatable
 {
-    use Authenticatable, CanResetPassword;
+    use Notifiable;
 
     /**
-     * User can have many events
+     * The attributes that are mass assignable.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @var array
      */
-    public function events()
-    {
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * User can organise many events
+     */
+    public function events() {
         return $this->hasMany('App\Event');
     }
 
@@ -35,8 +47,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * False: all entries with status 'pending_cancellation' or 'cancelled'
      */
     public function showWithdrawFromEventButton($event_id) {
-        $entries = $this->hasMany('App\Entry')->where('event_id','=', $event_id)->get();
-        #dd($entries);
+        $entries = $this->hasMany('App\Entry')->where('event_id', '=', $event_id)->get();
         foreach ($entries as $entry) {
             if ($entry->paymentStatus == 'paid') {
                 return True;
@@ -51,18 +62,5 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function eventEntries($event_id) {
         return $this->hasMany('App\Entry')->where('event_id','=',$event_id)->get();
     }
-    
-    
-    /**
-     * Fillable user fields (for registration)
-     */
-    protected $fillable = array(
-        'email',
-        'firstname',
-        'lastname',
-        'club',
-        'homeCountry',
-        'phone'
-    );
 
 }

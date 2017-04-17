@@ -13,7 +13,7 @@ class Entry extends Model
         'competition_id',
         'detail_id',
         'transaction_id',
-        'user_lastname',
+        'name',
         'paymentStatus',
         'discounts_applied'
     ];
@@ -22,7 +22,7 @@ class Entry extends Model
      * Entry is associated with one user
      */
     public function user() {
-    	return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 
     /**
@@ -36,7 +36,7 @@ class Entry extends Model
      * Return the competition
      */
     public function competition() {
-        return $this->belongsTo('App\Competition');
+        return $this->belongsTo('App\competition');
     }
 
     /**
@@ -52,5 +52,4 @@ class Entry extends Model
     public function transaction() {
         return $this->belongsTo('App\Transaction');
     }
-
 }

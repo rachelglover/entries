@@ -12,7 +12,7 @@ class Discount extends Model
         'type',
         'value',
         'for',
-        'info'
+        'info',
     ];
 
     /**

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    //Fields that the user can change
+    //
     protected $fillable = [
         'name',
         'slug',
@@ -24,15 +24,15 @@ class Event extends Model
         'featured',
         'registrationFee',
         'currency',
-        'user_id', //temporary
+        'user_id',
     ];
 
     // Make the dates available to Carbon by protecting them
     protected $dates = ['startDate', 'endDate', 'closingDate'];
 
-    //Scope for published events (query shorthand)
+    // Scope for published events (query shorthand)
     public function scopePublished($query) {
-        $query->where('status', '=', 'published');
+        $query->where('status','=','published');
     }
 
     //Scope for unpublished events (query shorthand)
@@ -42,18 +42,16 @@ class Event extends Model
 
     //Scope for featured events (query shorthand)
     public function scopeFeatured($query) {
-        $query->where('featured','=',1);
+        $query->where('featured', '=', 1);
     }
 
     //Scope for archived events (query shorthand)
     public function scopeArchived($query) {
-        $query->where('status','=','archived');
+        $query->where('status', '=', 'archived');
     }
 
     /**
-     * An Event is organised by a user
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * an event is organised by a user
      */
     public function user() {
         return $this->belongsTo('App\User');
@@ -69,11 +67,28 @@ class Event extends Model
     }
 
     /**
+     * Get a tag string for views
+     */
+    public function tagString() {
+        $first = 1;
+        foreach ($this->tags()->get() as $tag) {
+            if ($first == 0) {
+                $tagstring = $tagstring . ", " . $tag->name;
+            }
+            if ($first == 1) {
+                $tagstring = $tag->name;
+                $first = 0;
+            }
+        }
+        return $tagstring;
+    }
+
+    /**
      * Get a list of tag iDs associated with this event
      * @return array
      */
     public function getTagListAttribute() {
-        return $this->tags->lists('id')->all();
+        return $this->tags->pluck('id')->all();
     }
 
     /**
@@ -88,7 +103,7 @@ class Event extends Model
     /**
      * Retrieve all the specific questions that the organiser
      * wants to ask of competitors.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function questions() {
@@ -122,7 +137,7 @@ class Event extends Model
     }
 
     /**
-     * Optional extras (orders) associated with this event. 
+     * Optional extras (orders) associated with this event.
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function extrasOrdered() {
@@ -143,7 +158,7 @@ class Event extends Model
         return $this->hasMany('App\Entry');
     }
 
-    
+
 
     /**
      * Event can have many competitors entered
@@ -159,8 +174,7 @@ class Event extends Model
      */
     public function getOrganiserName() {
         $organiser = User::findOrFail($this->user_id);
-        $name = $organiser->firstname . " " . $organiser->lastname;
-        return $name;
+        return $organiser->name;
     }
 
     /**
@@ -181,5 +195,4 @@ class Event extends Model
         return $link;
     }
 
-    
 }

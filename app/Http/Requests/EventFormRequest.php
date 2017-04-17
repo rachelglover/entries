@@ -31,7 +31,6 @@ class EventFormRequest extends Request
             'startDate' => 'required|date|after:tomorrow',
             'endDate' => 'required|date',
             'closingDate' => 'required|date|after:tomorrow|before:startDate',
-            'paypal' => 'required|email',
             'image' => 'image'
         ];
     }

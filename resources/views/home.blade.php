@@ -68,7 +68,7 @@ _________________________________________________________ -->
                             <div class="content">
                                 <h4><a href="{{ action('EventsController@show',$event->slug) }}">{{ $event->name }}</a></h4>
 
-                                <p class="read-more"><a href="{{ action('EventsController@show',$event->slug) }}" class="btn btn-template-main">Enter</a>
+                                <p class="read-more"><a href="{{ action('EventsController@show',$event->slug) }}" class="btn btn-template-main">{{$event->tagstring()}}</a>
                                 </p>
                             </div>
                         </div>

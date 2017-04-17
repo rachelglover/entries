@@ -1,6 +1,12 @@
 <?php use App\User; ?>
 <div class="tab-pane" id="finances">
-    <p>We will transfer the entry fees to your PayPal account (<strong>{{$event->paypal}}</strong>) 24 hours after the date you chose to close the entries ({{$event->closingDate->toFormattedDateString()}}).</p>
+    <p>We will transfer the entry fees to your
+        @if ($event->payment_option == 'paypal')
+            PayPal account (<strong>{{$event->payment_paypal_address}}</strong>)
+        @else
+            bank account (<strong>{{$event->payment_account}}  {{$event->payment_sortcode}}</strong>)
+        @endif
+        24 hours after the date you chose to close the entries ({{$event->closingDate->toFormattedDateString()}}).</p>
     @if ($event->lateEntries == 1)
         <p>As you are accepting late entries, we will transfer the fees for any late entries 24 hours after the start of your event ({{$event->startDate->toFormattedDateString()}}).</p>
     @endif
@@ -16,7 +22,8 @@
         <tbody>
             @foreach ($event->transactions()->get()->sortByDesc('id') as $transaction)
                 {{! $transactionUser = User::find($transaction->user_id)}}
-                {{! $transactionAmount = $transaction->total - $transaction->transaction_fee - 2.99  }}
+                {{! $foresight_fee = env('FORESIGHT_FEE')}}
+                {{! $transactionAmount = $transaction->total - $transaction->transaction_fee - $foresight_fee  }}
 
                 @if ($transaction->transaction_type == 'competitor_payment')
                     <td class="alert-success">{{$transaction->id}}</td>

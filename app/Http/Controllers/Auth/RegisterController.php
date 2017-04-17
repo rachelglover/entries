@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
+
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
 class RegisterController extends Controller
 {
     /*
@@ -16,13 +19,16 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
+
     use RegistersUsers;
+
     /**
      * Where to redirect users after login / registration.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
+
     /**
      * Create a new controller instance.
      *
@@ -32,6 +38,7 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
     }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -44,13 +51,9 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'club' => 'required',
-            'homeCountry' => 'required',
-            'phone' => 'required'
         ]);
     }
+
     /**
      * Create a new user instance after a valid registration.
      *
@@ -60,13 +63,9 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
+            'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'club' => $data['club'],
-            'homeCountry' => $data['homeCountry'],
-            'phone' => $data['phone'],
         ]);
     }
 }

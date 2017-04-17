@@ -39,6 +39,7 @@ $(document).ready(function() {
 
 //Datepicker (start and end are linked)
 $(function() {
+    //Now to the jquery
     $('#startDate').datetimepicker({
         format: 'YYYY-M-D',
     });
@@ -56,7 +57,7 @@ $(function() {
 //date picker (closing date)
 $(function() {
     $('#closingDate').datetimepicker({
-        format: 'YYYY-M-D'
+        format: 'YYYY-M-D',
     });
 });
 
@@ -135,6 +136,44 @@ $(document).ready(function() {
     });
 });
 
+
+
+//Show paypal address if paypal selected
+$(document).ready(function() {
+    $('#payment_option').change(function() {
+        if($('#payment_option').val() == 'paypal')
+            $('#payment_paypal_address_div').fadeIn('fast');
+        else
+            $('#payment_paypal_address_div').fadeOut('fast');
+    });
+});
+//Show bank details if bank selected
+$(document).ready(function() {
+    $('#payment_option').change(function() {
+        if($('#payment_option').val() == 'bank')
+            $('#payment_account_div').fadeIn('fast');
+        else
+            $('#payment_account_div').fadeOut('fast');
+    });
+});
+$(document).ready(function() {
+    $('#payment_option').change(function() {
+        if($('#payment_option').val() == 'bank')
+            $('#payment_sortcode_div').fadeIn('fast');
+        else
+            $('#payment_sortcode_div').fadeOut('fast');
+    });
+});
+$(document).ready(function() {
+    $('#payment_account_div').hide();
+});
+$(document).ready(function() {
+    $('#payment_sortcode_div').hide();
+});
+$(document).ready(function() {
+    $('#payment_paypal_address_div').hide();
+});
+
 //Show user information (when organiser clicks user name on entry list) //modal
 $(function() {
     $('#viewEntryCompetitorInfoModal').on('show.bs.modal', function(event) {
@@ -199,4 +238,3 @@ $(document).ready(function() {
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 });
-
