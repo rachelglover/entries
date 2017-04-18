@@ -71,6 +71,7 @@ class Event extends Model
      */
     public function tagString() {
         $first = 1;
+        $tagstring = NULL;
         foreach ($this->tags()->get() as $tag) {
             if ($first == 0) {
                 $tagstring = $tagstring . ", " . $tag->name;

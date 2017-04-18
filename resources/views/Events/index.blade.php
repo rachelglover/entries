@@ -36,7 +36,7 @@
                         <div class="content">
                             <h4><a href="{{ action('EventsController@show', [$event->slug]) }}">{{ $event->name }}</a></h4>
                             <h5><a href="{{ action('EventsController@show', [$event->slug]) }}">
-                                    {{$event->tagstring()}}
+                                    {{$event->tagString()}}
                                 </a></h5>
                         </div>
                     </div>

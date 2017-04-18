@@ -10,6 +10,7 @@ use App\Competition;
 use App\Answer;
 use App\ExtraOrder;
 use App\Extra;
+use App\Mail\NewEntry;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Omnipay\Omnipay;
 
 class EntryController extends Controller
@@ -324,6 +326,10 @@ class EntryController extends Controller
             }
 
             \Flash::success('Thank you, your payment was successful and your current entries below.');
+
+            //Send a confirmation email
+            Mail::to($user->email)->send(new NewEntry($user, $event, $entries));
+
             return redirect(action('PagesController@userEntries'));
         } elseif ($data['state'] === 'failed') {
             //Delete the user entry and leave message

@@ -42,32 +42,38 @@
                                         $availability = $availability + ($detail->max - $entries); ?>
                                     @endforeach
 
-                                    {{ $availability }} places left
-                                </td>
-                                <td>
-                                    <table>
-                                        <select name="competitions[{{$competition->id}}]" class="form-control input-sm">
-                                            <option value="noEntry">Select a detail to enter...</option>
-                                        @foreach ($competition->details()->get() as $detail)
-                                            <!-- work out places left -->
-                                                <!-- $left = $detail->max - $entries->details($detail->id) -->
-                                                <!-- not elegant but required to do the calculation -->
-                                                <?php $entries = count($detail->entries()->get());
-                                                $left = $detail->max - $entries; ?>
+                                    @if ($availability > 0)
+                                        {{$availability}} places left
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <select name="competitions[{{$competition->id}}]" class="form-control input-sm">
+                                                    <option value="noEntry">Select a detail to enter...</option>
+                                                @foreach ($competition->details()->get() as $detail)
+                                                    <!-- work out places left -->
+                                                        <!-- $left = $detail->max - $entries->details($detail->id) -->
+                                                        <!-- not elegant but required to do the calculation -->
+                                                        <?php $entries = count($detail->entries()->get());
+                                                        $left = $detail->max - $entries; ?>
 
-                                                @if ($left > 1)
-                                                    <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} places left</option>
-                                                @endif
-                                                @if ($left == 1)
-                                                    <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} place left</option>
-                                                @endif
-                                                @if ($left == 0)
-                                                    <option value="{{$detail->id}}" disabled>{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | FULL</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </table>
-                                </td>
+                                                        @if ($left > 1)
+                                                            <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} places left</option>
+                                                        @endif
+                                                        @if ($left == 1)
+                                                            <option value="{{$detail->id}}">{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | {{$left}} place left</option>
+                                                        @endif
+                                                        @if ($left == 0)
+                                                            <option value="{{$detail->id}}" disabled>{{$detail->name}} | {{$detail->dateTime->toDayDateTimeString()}} | FULL</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </table>
+                                        </td>
+                                    @elseif ($availability <= 0)
+                                        FULL
+                                        </td><td></td>
+                                    @endif
+
                             </tr>
                         @endforeach
                         </tbody>
