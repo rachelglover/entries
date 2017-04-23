@@ -55,14 +55,14 @@ $(function() {
     });
 });
 //date picker (closing date)
-$(function() {
+$(document).ready(function() {
     $('#closingDate').datetimepicker({
         format: 'YYYY-M-D',
     });
 });
 
 //date picker for the entry form - earliest date = 1900
-$(function() {
+$(document).ready(function() {
     $('#questionDate').datetimepicker({
         format: 'YYYY-M-D'
     });

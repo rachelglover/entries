@@ -108,7 +108,7 @@
                                     </select>
                                 @endif
                                 @if ($question->answerType == "date")
-                                    <input type="date" id="questionDate" name="questions[{{$question->id}}]" class="form-control datetime">
+                                    <input type="text" id="questionDate" name="questions[{{$question->id}}]" class="form-control datetime">
                                 @endif
                                 @if ($question->answerType == "list")
                                     <select name="questions[{{$question->id}}]" class="form-control">
