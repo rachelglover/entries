@@ -62,7 +62,7 @@
 
     <div class="form-group">
         {!! Form::label('payment_option', 'Method of payment:') !!}
-        <p class="small">We send entry fees recieved during each week to event organisers every Saturday. We can transfer the entry fees to a PayPal account or to your bank account.</p>
+        <p class="small">We send the fees to you 24 hours after the closing date for entries - this is to ensure we can refund cancellations automatically. We transfer the entry fees to a PayPal account or to your bank account. We can also send entry fees to you before the closing date by arrangement if you <a href="{{action('PagesController@contact')}}">contact us</a>.</p>
         {!! Form::select('payment_option', $paymentOptions, null, ['class' => 'form-control']) !!}
     </div>
 
