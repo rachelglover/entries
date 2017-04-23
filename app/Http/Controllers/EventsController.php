@@ -123,7 +123,7 @@ class EventsController extends Controller
         $user = Auth::user();
 
         //Send an email to say event created.
-        Mail::to($user->email)->send(new NewEvent($event, $user));
+        //Mail::to($user->email)->send(new NewEvent($event, $user));
 
         //flash a message to the user
         \Flash::success('Your event was created successfully. Now you need to add competitions and details');
@@ -358,10 +358,21 @@ class EventsController extends Controller
             $data['slug'] = $slug . "-" . $numSlugs;
         }
 
+        //Make sure that if the user clicked/unclicked the extra
+        //fees buttons and entered anything >0 that if they're unclicked
+        //that the fees are definitely still 0.
+        if (array_key_exists('lateEntries',$data) == FALSE) {
+            $data['lateEntriesFee'] = 0;
+        }
+        if (array_key_exists('registration',$data) == FALSE) {
+            $data['registrationFee'] = 0;
+        }
+
         //modify the dates with carbon because we're using timedatepicker
         $data['startDate'] = Carbon::createFromFormat('Y-m-d', $data['startDate'])->format('Y-m-d H:i:s');
         $data['endDate'] = Carbon::createFromFormat('Y-m-d', $data['endDate'])->format('Y-m-d H:i:s');
         $data['closingDate'] = Carbon::createFromFormat('Y-m-d', $data['closingDate'])->format('Y-m-d H:i:s');
+
         //save the event
         $event = Auth::user()->events()->create($data);
 
@@ -376,6 +387,7 @@ class EventsController extends Controller
             #they didn't upload an image, so make the event use the stock image instead.
             $imageName = 'stock.jpg';
         }
+
 
 
         //Insert imageName into the database

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Omnipay\Omnipay;
 use App\Mail\NewEventLive;
 
@@ -111,7 +112,7 @@ class PagesController extends Controller
                     $user = \Auth::user();
                     \Flash::success('Congratulations, your event is now on the website and ready to accept entries');
                     //Send an email to say event published
-                    Mail::to($user->email)->send(new NewEventLive($event, $user));
+                    //Mail::to($user->email)->send(new NewEventLive($event, $user));
 
                     return redirect()->action('EventsController@admin', $event->slug)->with(['user' => $user, 'event' => $event]);
                 }
