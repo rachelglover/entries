@@ -48,7 +48,8 @@ class EventsTableSeeder extends Seeder
             if ($reg == 1) {
                 $regFee = rand(0,10);
             }
-            $paymentOption = array_rand(array('bank','paypal'));
+            $paymentOptions = array('bank', 'paypal');
+            $paymentOption = $paymentOptions[array_rand($paymentOptions)];
             $bankAccount = null;
             $sortCode = null;
             $paypalAddress = null;
