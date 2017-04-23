@@ -11,12 +11,12 @@ class EventTagTableSeeder extends Seeder
      */
     public function run()
     {
-        //currently 25 tags
+        //currently 11 tags
         for ($i = 1; $i<10; $i++) {
             for ($j = 1; $j<rand(1,5); $j++) {
                 DB::table('event_tag')->insert([
                     'event_id' => $i,
-                    'tag_id' => rand(1,22),
+                    'tag_id' => rand(1,11),
                 ]);
             }
         }

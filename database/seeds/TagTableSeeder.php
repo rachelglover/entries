@@ -12,71 +12,37 @@ class TagTableSeeder extends Seeder
     public function run()
     {
         DB::table('tags')->insert([
-            'name' => 'NSRA',
+            'name' => 'Smallbore',
         ]);
         DB::table('tags')->insert([
-            'name' => 'ISSF',
+            'name' => 'Fullbore',
         ]);
         DB::table('tags')->insert([
-            'name' => 'Prone',
-        ]);
-        DB::table('tags')->insert([
-            'name' => '3P',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Rifle',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Air Rifle',
+            'name' => 'Air',
         ]);
         DB::table('tags')->insert([
             'name' => 'Pistol',
         ]);
         DB::table('tags')->insert([
-            'name' => 'Air Pistol',
+            'name' => 'Rifle',
         ]);
         DB::table('tags')->insert([
-            'name' => '50m',
+            'name' => 'ISSF',
         ]);
         DB::table('tags')->insert([
-            'name' => '10m',
+            'name' => 'NSRA',
         ]);
         DB::table('tags')->insert([
-            'name' => '25m',
+           'name' => 'International'
         ]);
         DB::table('tags')->insert([
-            'name' => '300m',
+            'name' => 'National',
         ]);
         DB::table('tags')->insert([
-            'name' => '25yd',
+            'name' => 'County',
         ]);
         DB::table('tags')->insert([
-            'name' => '15yd',
+            'name' => 'Club',
         ]);
-        DB::table('tags')->insert([
-            'name' => '20yd',
-        ]);
-        DB::table('tags')->insert([
-            'name' => '100yd',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Dewar',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Double Dewar',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'English Match',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Indoor',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Outdoor',
-        ]);
-        DB::table('tags')->insert([
-            'name' => 'Electronic targets',
-        ]);
-
     }
 }
