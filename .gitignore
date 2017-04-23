@@ -1,9 +1,11 @@
 /node_modules
 /public/storage
+/public/img/events
 /vendor
 /.idea
 Homestead.json
 Homestead.yaml
 .env*
 .idea*
+.idea/workspace.xml
 .DS_Store
