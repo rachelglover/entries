@@ -23,9 +23,18 @@ class SocialAccountService {
             $user = User::whereEmail($providerUser->getEmail())->first();
 
             if (!$user) {
+                //Split the name into firstname and lastname
+                $fullname = $providerUser->getName();
+                $namelist = preg_split('/ /',$fullname);
+                $firstname = $namelist[0];
+                $lastname = "";
+                for ($i=1; $i<count($namelist);$i++ ) {
+                    $lastname = $lastname . " " . $namelist[$i];
+                }
                 $user = User::create([
                     'email' => $providerUser->getEmail(),
-                    'name' => $providerUser->getName(),
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
                     'password' => 'SocialUsers'.date('YYmmddHHiiss').rand(6,11),
                 ]);
             }

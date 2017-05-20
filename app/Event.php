@@ -178,7 +178,7 @@ class Event extends Model
      */
     public function getOrganiserName() {
         $organiser = User::findOrFail($this->user_id);
-        return $organiser->name;
+        return $organiser->firstname . " " . $organiser->lastname;
     }
 
     /**

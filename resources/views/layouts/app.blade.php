@@ -128,10 +128,11 @@ _________________________________________________________ -->
                                     </ul>
                                 </li>
                                 @if (Auth::check())
+                                    {{! $user = Auth::user()}}
                                 <li class="dropdown">
-                                    <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
+                                    <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">{{$user->firstname}} {{$user->lastname}} <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        {{! $user = Auth::user()}}
+
                                         @if ($user->id == 1)
                                             <li><a href="{{ action('EventsController@siteAdmin') }}">Site admin</a></li>
                                         @endif

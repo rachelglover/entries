@@ -17,7 +17,7 @@ class ExtrasTableSeeder extends Seeder
             'cost' => '20.00',
             'multiples' => 1,
             'infoRequired' => 0,
-            'infoRequiredLabel' => ''
+            'infoRequiredLabel' => '',
         ]);
         DB::table('extras')->insert([
     		'event_id' => 1,

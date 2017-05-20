@@ -21,7 +21,8 @@ class CreateExtrasEntriesTable extends Migration
             $table->integer('detail_id')->unsigned();
             $table->integer('transaction_id')->default(null)->unsigned()->nullable();
             $table->string('paymentStatus', 255);
-            $table->string('name',255);
+            $table->string('firstname',255);
+            $table->string('lastname', 255);
             $table->string('discounts_applied',255);
             $table->timestamps();
             //Relationship between entry and event_id

@@ -69,7 +69,8 @@ class EntryController extends Controller
                 $entryData['event_id'] = $data['event_id'];
                 $entryData['competition_id'] = $competition_id;
                 $entryData['detail_id'] = $detail_id;
-                $entryData['name'] = $user->name;
+                $entryData['firstname'] = $user->firstname;
+                $entryData['lastname'] = $user->lastname;
                 $entryData['paymentStatus'] = 'unpaid';
                 $entryData['discounts_applied'] = $data['discounts_applied'];
                 //Now insert the data
@@ -159,6 +160,7 @@ class EntryController extends Controller
      * proceeding to payment.
      */
     public function confirmEntry( Request $request ) {
+
         // returns a confirm view which then sends the user to the store function above.
         $data = $request->all();
         $user = Auth::user();
@@ -243,7 +245,7 @@ class EntryController extends Controller
             $discountedRegistrationFee = $discountedRegistrationFee * $percentage;
         }
 
-        //Charge a late entry fee? //if it's past the closing date
+        //Charge a late entry fee? if it\'s past the closing date
         $lateEntryFee = 0;
         if (Carbon::now()->gt($event->closingDate)) {
             $lateEntryFee = $event->lateEntriesFee;
@@ -319,16 +321,19 @@ class EntryController extends Controller
             $savedTransaction = Transaction::create($transaction);
             //Change all the entries to paid
             $entries = $user->eventEntries($event_id);
+            $competitions = [];
             foreach ($entries as $entry) {
                 $entry->paymentStatus = 'paid';
                 $entry->transaction_id = $savedTransaction->id;
                 $entry->save();
+                $competition = Competition::findOrFail($entry->competition_id);
+                $competitions[$entry->id] = $competition;
             }
 
             \Flash::success('Thank you, your payment was successful and your current entries below.');
 
             //Send a confirmation email
-            Mail::to($user->email)->send(new NewEntry($user, $event, $entries));
+            Mail::to($user->email)->send(new NewEntry($user, $event, $entries, $competitions));
 
             return redirect(action('PagesController@userEntries'));
         } elseif ($data['state'] === 'failed') {

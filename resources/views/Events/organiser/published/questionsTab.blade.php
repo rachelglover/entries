@@ -10,7 +10,7 @@
         @endforeach
         </thead>
         <tbody>
-        {{! $entries = $event->entries()->get()->sortBy('name') }}
+        {{! $entries = $event->entries()->get()->sortBy('lastname') }}
         {{! $competitors = $entries->pluck('user_id')->unique()}}
 
         @foreach ($competitors as $competitor)

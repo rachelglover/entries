@@ -55,7 +55,7 @@ _________________________________________________________ -->
                             <div class="top">
                                 <div class="image">
                                     {{! $image = "img/events/".$event->imageFilename}}
-                                    <img src="{{ URL::asset($image) }}" alt="" class="img-responsive">
+                                    <center><img src="{{ URL::asset($image) }}" alt="" class="img-responsive" style="height:200px;"></center>
                                     
                                 </div>
                                 <div class="bg"></div>

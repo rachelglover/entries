@@ -88,6 +88,15 @@ class PagesController extends Controller
         return view('user.profile')->with(['user' => $user]);
     }
 
+    /**
+     * Edit the user profile
+     */
+    public function editProfile(Request $request) {
+        $user = Auth::user();
+        dd($request);
+
+    }
+
 
     /**
      * @param Request $request
@@ -150,7 +159,8 @@ class PagesController extends Controller
     public function processContactForm(Request $request) {
         \Mail::send('pages.contact',
             array(
-                'name' => $request->get('name'),
+                'firstname' => $request->get('firstname'),
+                'lastname' => $request->get('lastname'),
                 'email' => $request->get('email'),
                 'user_message' => $request->get('message')
             ), function($message)

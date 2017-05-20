@@ -16,11 +16,12 @@ class NewEntry extends Mailable
      *
      * @return void
      */
-    public function __construct($athlete, $event, $entries)
+    public function __construct($athlete, $event, $entries, $competitions)
     {
         $this->athlete = $athlete;
         $this->entry = $entries;
         $this->event = $event;
+        $this->competitions = $competitions;
     }
 
     /**
@@ -37,6 +38,7 @@ class NewEntry extends Mailable
             ->with('athlete', $this->athlete)
             ->with('entries', $this->entry)
             ->with('event', $this->event)
+            ->with('competitions', $this->competitions)
             ->from($address, $name)
             ->replyTo($address, $name)
             ->subject($subject);

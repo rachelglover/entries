@@ -13,7 +13,7 @@ class Extra extends Model
         'cost',
         'multiples',
         'infoRequired',
-        'infoRequiredLabel'
+        'infoRequiredLabel',
     ];
 
     /**

@@ -6,7 +6,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-7">
-                    <h1>Your profile</h1>
+                    <h2>Profile</h2>
                 </div>
             </div>
         </div>
@@ -15,8 +15,10 @@
         <div class="container">
             @include('flash::message')
             <div class="col-lg-12">
-                <p>Some profile info here</p>
+                <h4>Hi {{$user->firstname}}</h4>
             </div>
         </div>
     </div>
+
+    @include('user/_profileform')
 @endsection

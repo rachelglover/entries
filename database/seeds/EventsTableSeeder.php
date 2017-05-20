@@ -123,7 +123,8 @@ class EventsTableSeeder extends Seeder
                         'competition_id' => $competition->id,
                         'detail_id' => $detail->id,
                         'transaction_id' => null,
-                        'name' => $user->name,
+                        'firstname' => $user->firstname,
+                        'lastname' => $user->lastname,
                         'paymentStatus' => 'paid',
                         'discounts_applied' => '',
                     ]);

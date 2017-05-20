@@ -36,7 +36,7 @@
                                     <th>Home Country</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($detail->entries()->get()->sortBy('name') as $entry)
+                                    @foreach ($detail->entries()->get()->sortBy('lastname') as $entry)
                                         {{! $thisUser = $entry->user()->first() }}
                                         <tr>
                                             <td><span class="text-uppercase">{{$thisUser->lastname}}</span>, {{$thisUser->firstname}}</td>

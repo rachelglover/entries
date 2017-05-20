@@ -28,6 +28,10 @@
                         <input type="checkbox" class="form-control" name="multiples" value="1">
                     </div>
                     <div class="form-group">
+                        <label for="discountable" class="control-label">If you are providing any entry discounts to competitors, should this be discounted too?</label>
+                        <input type="checkbox" class="form-control" name="discountable" value="1">
+                    </div>
+                    <div class="form-group">
                         <label for="infoRequired" class="control-label">Do you need any information from the competitor about this extra?</label>
                         <p class="small">e.g. team name or T-shirt size</p>
                         <input type="checkbox" class="form-control" name="infoRequired" id="infoRequired" value="1">

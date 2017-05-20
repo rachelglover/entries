@@ -348,6 +348,12 @@ class EventsController extends Controller
         //event (and set status)
         $data = $request->all();
 
+        //If there's a website, make sure it starts with http://
+        $website = $data['website'];
+        if (preg_match("/http/",$website) == False) {
+            $data['website'] = 'http://' . $website;
+        }
+
 
         //Create a slug from the event name
         $slug = Str::slug($data['name']);
@@ -408,7 +414,7 @@ class EventsController extends Controller
         $header = array('Competitor name','ID','Email','Club','Home Country');
         if ($type == 'competitors') {
             $event = Event::findOrFail($id);
-            $entries = $event->entries()->get()->sortBy('name');
+            $entries = $event->entries()->get()->sortBy('lastname');
             $competitor_ids = $entries->pluck('user_id')->unique();
             $competitions = $event->competitions()->get();
             $header = array();
@@ -473,7 +479,7 @@ class EventsController extends Controller
             $megasheet = array($megaheader);
 
             // DATA ENTRY TO MEGASHEET
-            $entries = $event->entries()->get()->sortBy('name');
+            $entries = $event->entries()->get()->sortBy('lastname');
             $competitor_ids = $entries->pluck('user_id')->unique();
             foreach ($competitor_ids as $competitor_id) {
                 $thisCompetitor = User::findOrFail($competitor_id);
@@ -530,7 +536,7 @@ class EventsController extends Controller
             foreach ($competitions as $competition) {
                 $details = $competition->details()->get();
                 foreach ($details as $detail) {
-                    $entries = $detail->entries()->get()->sortBy('name');
+                    $entries = $detail->entries()->get()->sortBy('lastname');
                     $sheetdata = array($header);
                     $competitor_ids = $entries->pluck('user_id')->unique();
                     foreach ($competitor_ids as $competitor_id) {
@@ -573,7 +579,7 @@ class EventsController extends Controller
             $details = $competition->details()->get();
             $sheets = array();
             foreach ($details as $detail) {
-                $entries = $detail->entries()->get()->sortBy('name');
+                $entries = $detail->entries()->get()->sortBy('lastname');
                 $sheetdata = array($header);
                 $competitor_ids = $entries->pluck('user_id')->unique();
                 foreach ($competitor_ids as $competitor_id) {
@@ -605,7 +611,7 @@ class EventsController extends Controller
         }
         if ($type == 'detail') {
             $detail = Detail::findOrFail($id);
-            $entries = $detail->entries()->get()->sortBy('name');
+            $entries = $detail->entries()->get()->sortBy('lastname');
             $sheetdata = array($header);
             $competitor_ids = $entries->pluck('user_id')->unique();
             foreach ($competitor_ids as $competitor_id) {
@@ -632,7 +638,7 @@ class EventsController extends Controller
         }
         if ($type == 'competitor_entries') {
             $event = Event::findOrFail($id);
-            $entries = $event->entries()->get()->sortBy('name');
+            $entries = $event->entries()->get()->sortBy('lastname');
             $competitor_ids = $entries->pluck('user_id')->unique();
             //Add competition names to the header
             foreach ($event->competitions()->get() as $competition) {
@@ -676,7 +682,7 @@ class EventsController extends Controller
         }
         if ($type == 'competitor_answers') {
             $event = Event::findOrFail($id);
-            $entries = $event->entries()->get()->sortBy('name');
+            $entries = $event->entries()->get()->sortBy('lastname');
             $competitors = $entries->pluck('user_id')->unique();
             //Add the questions to the header
             foreach ($event->questions()->get() as $question) {

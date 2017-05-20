@@ -15,7 +15,8 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             'email' => 'rachelglover@gmail.com',
             'password' => bcrypt('rhl0verg'),
-            'name' => 'Rachel Glover',
+            'firstname' => 'Rachel',
+            'lastname' => 'Glover',
             'club' => 'Easingwold',
             'homeCountry' => 'IOM',
             'phone' => '07932914745',
@@ -38,7 +39,8 @@ class UsersTableSeeder extends Seeder
             DB::table('users')->insert([
                 'email' => $firstname . "." . $lastname . $randomEmail . "@foresightentries.com",
                 'password' => "password",
-                'name' => $firstname . " " . $lastname,
+                'firstname' => $firstname,
+                'lastname' => $lastname,
                 'club' => $club,
                 'homeCountry' => $country,
                 'phone' => "07" . rand(100000000,999999999)

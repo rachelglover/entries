@@ -13,7 +13,8 @@ class Entry extends Model
         'competition_id',
         'detail_id',
         'transaction_id',
-        'name',
+        'firstname',
+        'lastname',
         'paymentStatus',
         'discounts_applied'
     ];
