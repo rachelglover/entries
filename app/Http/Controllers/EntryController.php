@@ -11,6 +11,9 @@ use App\Answer;
 use App\ExtraOrder;
 use App\Extra;
 use App\Mail\NewEntry;
+use App\Mail\NotifyAdmin;
+use App\Mail\WithdrawCompetition;
+use App\Mail\WithdrawEvent;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -251,14 +254,16 @@ class EntryController extends Controller
             $lateEntryFee = $event->lateEntriesFee;
         }
         //FORESIGHT FEE
-        $foresightFee = env('FORESIGHT_FEE');
+        $foresightFeePercentage = env('FORESIGHT_FEE_PERCENTAGE');
+        $foresightFeeCalculationSubtotal = $discountedSubtotal + $discountedRegistrationFee + $lateEntryFee;
+        $foresightFee = $foresightFeeCalculationSubtotal * $foresightFeePercentage;
 
         $finalsubtotal = $discountedSubtotal + $discountedRegistrationFee + $lateEntryFee + $foresightFee;
 
         //paypal fees (3.4% + 20p)
         $paypalFees = ($finalsubtotal * 0.034) + 0.2;
 
-        $feesTotal = $discountedRegistrationFee + $lateEntryFee + $foresightFee + $paypalFees;
+        $feesTotal = $discountedRegistrationFee + $lateEntryFee + $foresightFee;
 
         $grandTotal = $finalsubtotal + $paypalFees;
 
@@ -334,6 +339,7 @@ class EntryController extends Controller
 
             //Send a confirmation email
             Mail::to($user->email)->send(new NewEntry($user, $event, $entries, $competitions));
+            Mail::to('contact@foresightentries.com')->send(new NotifyAdmin('Competitor Entry', $event, 'Competitor: ' . $user->id . " -- " . $user->firstname . " " . $user->lastname));
 
             return redirect(action('PagesController@userEntries'));
         } elseif ($data['state'] === 'failed') {
@@ -382,7 +388,13 @@ class EntryController extends Controller
         $entry['paymentStatus'] = 'pending_cancellation_single';
         $entry->save();
         $competition = $entry->competition()->first();
+        $event = Event::findOrFail($competition->event_id);
         \Flash::success("Your entry to " . $competition->name . " was cancelled and you will be refunded within 48 hours.");
+
+        //Send a confirmation email
+        $user = Auth::user();
+        Mail::to($user->email)->send(new WithdrawCompetition($user, $entry, $competition, $event));
+        Mail::to('contact@foresightentries.com')->send(new NotifyAdmin('Competitor Competition Withdrawal', $event, 'Competitor: ' . $user->id . " -- " . $user->firstname . " " . $user->lastname));
         return redirect(action('PagesController@userEntries'));
     }
 
@@ -398,6 +410,9 @@ class EntryController extends Controller
         }
         $event = Event::find($event_id);
         \Flash::success("Your entries to '" . $event->name . "' have been cancelled and you will be refunded within 48 hours.");
+        //Send a confirmation email
+        Mail::to($user->email)->send(new WithdrawEvent($user, $event, $entries));
+        Mail::to('contact@foresightentries.com')->send(new NotifyAdmin('Competitor Event Withdrawal', $event, 'Competitor: ' . $user->id . " -- " . $user->firstname . " " . $user->lastname));
         return redirect(action('PagesController@userEntries'));
     }
 
@@ -408,6 +423,9 @@ class EntryController extends Controller
         $entry = Entry::findOrFail($entry_id);
         $entry->paymentStatus = 'cancelled';
         $entry->save();
+
+        //Now that it's been refunded also put a refund transaction
+
         return redirect(action('EventsController@siteAdmin'));
     }
 }

@@ -1,5 +1,5 @@
 <div class="tab-pane" id="communications">
-    <p>You can send an email to all of your competitors below and your competitors will be able to reply to your email address directly. This allows your entrants to reply to you directly. Alternatively, all the email addresses for your competitors are in the main Excel download on the Overview tab. </p>
+    <p>You can send an email to all of your competitors below and your competitors will be able to reply to your email address directly. This allows your entrants to reply to you directly. Alternatively, if you want to contact only one competitor, their email address will be in the main Excel download on the Overview tab. </p>
     <form method="post" action="{{ action('EventsController@sendMassEmail', $event->slug) }}">
         <div class="modal-body">
             <div class="form-group">

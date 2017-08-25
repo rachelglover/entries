@@ -123,7 +123,8 @@ class EventsController extends Controller
         $user = Auth::user();
 
         //Send an email to say event created.
-        //Mail::to($user->email)->send(new NewEvent($event, $user));
+        Mail::to($user->email)->send(new NewEvent($event, $user));
+        Mail::to('contact@foresightentries.com')->send(new NotifyAdmin('New Event', $event, 'Competitor: ' . $user->id . " -- " . $user->firstname . " " . $user->lastname));
 
         //flash a message to the user
         \Flash::success('Your event was created successfully. Now you need to add competitions and details');

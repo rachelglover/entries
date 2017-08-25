@@ -7,21 +7,21 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WithdrawEvent extends Mailable
+class NotifyAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
+     * $type = 'refund', 'new_event', 'new_entry', 'event_published'
      *
      * @return void
      */
-    public function __construct($user, $event, $entries)
+    public function __construct($type, $event, $message)
     {
-        //
+        $this->type = $type;
         $this->event = $event;
-        $this->athlete = $user;
-        $this->entry = $entries;
+        $this->messagetext = $message;
     }
 
     /**
@@ -33,10 +33,10 @@ class WithdrawEvent extends Mailable
     {
         $address = 'contact@foresightentries.com';
         $name = "Foresight Entries";
-        $subject = $this->event->name;
-        return $this->view('emails.WithdrawEvent')
-            ->with('athlete', $this->athlete)
-            ->with('entries', $this->entry)
+        $subject = "ADMIN NOTIFICATION: " . $this->event->name;
+        return $this->view('emails.NotifyAdmin')
+            ->with('type', $this->type)
+            ->with('messagetext', $this->messagetext)
             ->with('event', $this->event)
             ->from($address, $name)
             ->replyTo($address, $name)

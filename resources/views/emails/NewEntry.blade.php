@@ -11,3 +11,6 @@
 </ul>
 
 <p>You can manage your entries from <a href="{{ action('PagesController@userEntries') }}">your account</a>, including cancellations and refunds.</p>
+
+<p>Many thanks,<br>
+    The Foresight Entries Team</p>

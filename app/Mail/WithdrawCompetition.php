@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WithdrawEvent extends Mailable
+class WithdrawCompetition extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,12 +16,13 @@ class WithdrawEvent extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $event, $entries)
+    public function __construct($user, $entry, $competition, $event)
     {
         //
-        $this->event = $event;
         $this->athlete = $user;
-        $this->entry = $entries;
+        $this->entry = $entry;
+        $this->competition = $competition;
+        $this->event = $event;
     }
 
     /**
@@ -34,9 +35,10 @@ class WithdrawEvent extends Mailable
         $address = 'contact@foresightentries.com';
         $name = "Foresight Entries";
         $subject = $this->event->name;
-        return $this->view('emails.WithdrawEvent')
+        return $this->view('emails.WithdrawCompetition')
             ->with('athlete', $this->athlete)
             ->with('entries', $this->entry)
+            ->with('competition', $this->competition)
             ->with('event', $this->event)
             ->from($address, $name)
             ->replyTo($address, $name)

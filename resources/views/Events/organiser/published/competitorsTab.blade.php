@@ -16,7 +16,7 @@
         @foreach ($competitors as $competitor)
             {{! $compEntries = $event->entries()->get()->where('user_id',$competitor) }}
             {{! $thisCompetitor = User::findOrFail($competitor) }}
-            <tr><td class="bold">{{ $thisCompetitor->name }}</td>
+            <tr><td class="bold">{{ strtoupper($thisCompetitor->lastname) }}, {{ $thisCompetitor->firstname }}</td>
                 <td class="center">{{$thisCompetitor->id + 1000}}</td>
                 @foreach ($event->competitions()->get() as $competition)
                     <td class="center">

@@ -14,7 +14,7 @@
         @foreach ($competitors as $competitor)
             {{! $competitorExtraOrders = $event->extrasOrdered()->get()->where('user_id',$competitor) }}
             {{! $thisCompetitor = User::findOrFail($competitor) }}
-            <tr><td class="bold">{{ $thisCompetitor->lastname }}, {{ $thisCompetitor->firstname }}</td>
+            <tr><td class="bold">{{ strtoupper($thisCompetitor->lastname) }}, {{ $thisCompetitor->firstname }}</td>
                 <td class="center">{{$thisCompetitor->id + 1000}}</td>
                 @foreach ($event->extras()->get() as $extra)
                     <td class="center">

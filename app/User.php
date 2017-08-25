@@ -60,7 +60,9 @@ class User extends Authenticatable
      * User has multiple entries to one event
      */
     public function eventEntries($event_id) {
-        return $this->hasMany('App\Entry')->where('event_id','=',$event_id)->get();
+        //Count the number of entries to this event.
+        //don't include entries that have been refunded.
+        return $this->hasMany('App\Entry')->where('event_id','=',$event_id)->where('paymentStatus', '!=', 'refunded')->where('paymentStatus','!=', 'cancelled')->get();
     }
 
 }

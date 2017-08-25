@@ -97,9 +97,9 @@
 									<br><small>
 										This consists of a ForesightEntries fee of £{{$foresightFee}}
 									@if ($event->registration == 1)
-										, a registration fee being charged by the Event organiser of £{{$discountedRegistrationFee}}
+										 and a registration fee being charged by the Event organiser of £{{$discountedRegistrationFee}}
 									@endif
-										and PayPal fees of £{{$paypalFees}}.
+										. The ForesightEntries fee is 10% of the sub-total minus any discounts applied.
 									</small>
 								</td>
 								<td>£{{ $feesTotal }}</td>

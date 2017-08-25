@@ -31,7 +31,7 @@ class EventsTableSeeder extends Seeder
             }
 
             $year = 2017;
-            $month = rand(4,12);
+            $month = rand(8,12);
             $startDate = rand(8,28); #8 is imp because of closingd ate
             $endDate = $startDate + 2;
             $closingDate = $startDate - 7;
